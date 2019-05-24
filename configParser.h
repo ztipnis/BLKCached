@@ -1,8 +1,9 @@
 //config_parser
-#import <string>
-#import <sstream>
-#import <fstream>
-#import <unordered_map>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <unordered_map>
+#include <algorithm>
 
 #ifndef BLKCACHE_CFG_PARSE
 #define BLKCACHE_CFG_PARSE

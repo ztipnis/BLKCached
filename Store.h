@@ -87,6 +87,9 @@ namespace BLKCACHE{
 				_store[key] = ref(loc, b);
 			}
 		}
+		bool containsKey(std::string key){
+			return !(_store.find(key) == _store.end());
+		}
 		std::string get(std::string key){
 			ref& r = _store[key];
 			return *r;

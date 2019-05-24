@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <time.h>
+#include <mutex>
 
 #ifndef BLKCACHE_BLOCK
 #define BLKCACHE_BLOCK
