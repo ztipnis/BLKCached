@@ -16,6 +16,9 @@ namespace BLKCACHE{
 	template <unsigned long BLOCK_SIZE>  class Block{
 		friend class Store<BLOCK_SIZE>;
 		private:
+			/**
+			 * @brief      Represents raw memory (void pointer) which is described by this block object
+			 */
 			struct RawMemory{
 				void* mem;
 				RawMemory(){
@@ -25,20 +28,34 @@ namespace BLKCACHE{
 					free(mem);
 				}
 			};
-			long long blockno;
-			size_t size;
-			std::weak_ptr<RawMemory> raw;
-			void (&getter)(long long, void*);
-			void (&setter)(long long, void*);
-			ssize_t free_space;
-			std::mutex blkMTX;
+			long long blockno; //number of the block within the segments (used by PMDK)
+			size_t size; //total size of the objects represented by the block
+			std::weak_ptr<RawMemory> raw; //pointer to the raw memory object that is stored by the block. Auto handles constructors and desctructors
+			void (&getter)(long long, void*); //pointer to function to fetch the data from the disk
+			void (&setter)(long long, void*); //pointer to function to store the data to the disk
+			ssize_t free_space; //total free space remaining in the block
+			std::mutex blkMTX; //mutex - ensures concurrent write requests don't currupt the data
 		public:
 			typedef struct RawMemory RawMemory;
+			/**
+			 * @brief      Creates a block
+			 *
+			 * @param[in]  block    The block number
+			 * @param[in]  _getter  The getter function to fetch data from disk
+			 * @param[in]  _setter  The setter function to store data on disk
+			 */
 			Block(long long block, void (&_getter)(long long, void*) , void (&_setter)(long long, void*) ): setter(_setter), getter(_getter){
 				blockno = block;
 				size = BLOCK_SIZE;
 				free_space = BLOCK_SIZE;
 			}
+			/**
+			 * @brief      get string which starts at specified offset
+			 *
+			 * @param[in]  offset  The offset at which the string starts
+			 *
+			 * @return    string stored at offset
+			 */
 			std::string get(size_t offset){
 				std::lock_guard<std::mutex> lg(blkMTX);
 				auto start = lock();
@@ -53,6 +70,13 @@ namespace BLKCACHE{
 				delete[] c;
 				return s;
 			}
+			/**
+			 * @brief      put a string in the block
+			 *
+			 * @param[in]  s     string to store
+			 *
+			 * @return     the offset at which the string is stored
+			 */
 			ssize_t put(std::string s){
 				std::lock_guard<std::mutex> lgb(blkMTX);
 				auto start = lock();
@@ -72,6 +96,13 @@ namespace BLKCACHE{
 				raw = start;
 				return st_offset;
 			}
+			/**
+			 * @brief      delete data at offset
+			 *
+			 * @param[in]  offset  The offset
+			 *
+			 * @return     the string that was stored at offset
+			 */
 			std::string del(size_t offset){
 				std::lock_guard<std::mutex> lgb(blkMTX);
 				auto start = lock();
@@ -92,6 +123,11 @@ namespace BLKCACHE{
 				delete[] c;
 				return s;
 			}
+			/**
+			 * @brief      Gets the free space.
+			 *
+			 * @return     The free space.
+			 */
 			size_t getFreeSpace() const{
 				return free_space;
 			}
@@ -111,16 +147,29 @@ namespace BLKCACHE{
 				return !(free_space <= b.free_space);
 			}
 		private:
+			/**
+			 * @brief      debug func prints the block data to the screen
+			 */
 			void print_stack() const{
 				auto start = lock();
 				std::cout << ((char*) start->mem) << std::endl;
 			}
+			/**
+			 * @brief      write the data to the disk
+			 *
+			 * @param[in]  lock_ptr  lock on the raw memory stored
+			 */
 			void write(std::shared_ptr<RawMemory> lock_ptr){
 				if(!lock_ptr) return;
 				static std::mutex fileMTX;
 				std::lock_guard<std::mutex> lgf(fileMTX);
 				setter(blockno, lock_ptr->mem);
 			}
+			/**
+			 * @brief      keep the raw memory alive for operations
+			 *
+			 * @return     return strong pointer to the raw memory handled by the block.
+			 */
 			std::shared_ptr<RawMemory> lock(){
 				static std::mutex fileMTX;
 				std::lock_guard<std::mutex> lgf(fileMTX);

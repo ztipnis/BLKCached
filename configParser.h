@@ -7,8 +7,15 @@
 
 #ifndef BLKCACHE_CFG_PARSE
 #define BLKCACHE_CFG_PARSE
-
+/**
+ * map that stores the config info from the config file
+ */
 static std::unordered_map<std::string,std::string> config;
+/**
+ * @brief      parse the config file
+ *
+ * @param[in]  config_path  The path to the config file
+ */
 void parseConfig(std::string config_path){
 	std::ifstream config_file(config_path);
 	std::string line;
