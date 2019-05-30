@@ -4,47 +4,53 @@
 
 #include "configParser.h"
 #include <libpmemblk.h>
-#define	POOL_SIZE ((off_t)(config["poolSize"] << 30))
+#include <string>
+#define	POOL_SIZE ((off_t)(stoi(config["poolSize"])) << 30)
 
 extern std::unordered_map<std::string,std::string> config;
 
 
 namespace BLKCACHE{
 	namespace MEMORY{
-		PMEMblkpool *pbp;
-		void set(long long bno, void* rawm){
-			if(!*pbp){
-				pbp = pmemblk_create(config["path"], S_BLK,POOL_SIZE , 0666);
+		class PMEMBlock{
+		private:
+			PMEMblkpool* pbp;
+		public:
+			PMEMBlock(const char* path, size_t blocksize, size_t poolSize): pbp(pmemblk_create(path, blocksize,poolSize,0666)){
 				if (pbp == NULL)
-	    			pbp = pmemblk_open(config["path"], S_BLK);
+	    			pbp = pmemblk_open(path, blocksize);
 	    		if (pbp == NULL) {
 					perror(path);
 					exit(1);
 				}
 			}
-			if (pmemblk_write(pbp, rawm, bno) < 0) {
-				perror("pmemblk_write");
-				exit(1);
+			~PMEMBlock(){
+				pmemblk_close(pbp);
 			}
-			pmemblk_close(pbp);
-			//std::memcpy(mem, rawm, DEFAULT_BLOCK_SIZE);
+			void read(int bno, void* mem){
+				if (pmemblk_read(pbp, mem, bno) < 0) {
+					perror("pmemblk_read");
+					exit(1);
+				}
+			}
+			void write(void* mem, int bno){
+				if (pmemblk_write(pbp, mem, bno) < 0) {
+					perror("pmemblk_write");
+					exit(1);
+				}
+			}
+
+		};
+
+
+		static std::shared_ptr<PMEMBlock> blk(nullptr);
+		void set(long long bno, void* rawm){
+			if(!blk) blk = std::make_shared<PMEMBlock>(config["path"].c_str(), S_BLK, POOL_SIZE);
+			blk->write(rawm, bno);
 		}
 		void get(long long bno, void* rawm){
-			if(!*pbp){
-				pbp = pmemblk_create(config["path"], S_BLK, POOL_SIZE, 0666);
-				if (pbp == NULL)
-	    			pbp = pmemblk_open(config["path"], S_BLK);
-	    		if (pbp == NULL) {
-					perror(path);
-					exit(1);
-				}
-			}
-			if (pmemblk_read(pbp, rawm, bno) < 0) {
-				perror("pmemblk_read");
-				exit(1);
-			}
-			pmemblk_close(pbp);
-			//std::memcpy(rawm, mem, DEFAULT_BLOCK_SIZE);
+			if(!blk) blk = std::make_shared<PMEMBlock>(config["path"].c_str(), S_BLK, POOL_SIZE);
+			blk->read(bno, rawm);
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace BLKCACHE{
 	class Store{
 	private:
 		Store(){}
-		long long lastBlockno = 0;
+		static long long lastBlockno = 0;
 		struct ref {
 			size_t offset;
 			Block<BLOCK_SIZE>* block;
@@ -95,7 +95,14 @@ namespace BLKCACHE{
 			return *r;
 		}
 		std::string del(std::string key){
-			return _store[key]->del(_store[key].offset);
+			auto ret = _store[key]->del(_store[key].offset);
+			_store.erase(key);
+			return ret;
+		}
+		void forKeys(auto cb){
+			for(auto kv : _store){
+				cb(kv.first);
+			}
 		}
 		~Store(){
 			for(auto b: blocks){

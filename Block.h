@@ -24,7 +24,7 @@ namespace BLKCACHE{
 				RawMemory(){
 					mem = malloc(BLOCK_SIZE);
 				}
-				~RawMemory(){
+				virtual ~RawMemory(){
 					free(mem);
 				}
 			};
@@ -35,6 +35,7 @@ namespace BLKCACHE{
 			void (&setter)(long long, void*); //pointer to function to store the data to the disk
 			ssize_t free_space; //total free space remaining in the block
 			std::mutex blkMTX; //mutex - ensures concurrent write requests don't currupt the data
+			~Block(){};
 		public:
 			typedef struct RawMemory RawMemory;
 			/**
