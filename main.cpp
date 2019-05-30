@@ -20,9 +20,15 @@
 #include "Store.h"
 
 typedef BLKCACHE::Store<4096> store;
-
+/**
+ * Has kill signal been caught? Atomic and volatile because set by signal not on
+ * main thread
+ */
 static volatile sig_atomic_t quit = 0;
 
+/**
+ * @brief      Error Encountered When Setting up Server or Socket
+ */
 class ServerError : public virtual std::runtime_error{
 public:
 	ServerError() : std::runtime_error::runtime_error("Unknown Server Error") {}
@@ -33,6 +39,9 @@ public:
 		"Server Error: " + std::string(std::strerror(no))){
 	}
 };
+/**
+ * @brief      Error Encountered When Communicating With Socket
+ */
 class SocketError : public virtual std::runtime_error{
 public:
 	SocketError() : std::runtime_error::runtime_error("Unknown Socket Error") {}
@@ -44,7 +53,13 @@ public:
 	}
 };
 
-
+/**
+ * @brief      Shim used bridge C syscall "read" and C++ strings
+ *
+ * @param[in]  fd    File Descriptor from which to rea
+ *
+ * @return     The string value read from the File Descriptor
+ */
 inline std::string srecv(int fd){
 	char buffer[2048] = {0};
 	if(read(fd,buffer,2048) < 0) throw SocketError(errno, std::string(__FILE__) + " - " + std::to_string(__LINE__));
@@ -52,10 +67,21 @@ inline std::string srecv(int fd){
 	in = buffer;
 	return in;
 }
+/**
+ * @brief      Shim used to bridge C syscall "send" and C++ strings
+ *
+ * @param[in]  fd      Socket File Descriptor on which to write
+ * @param[in]  output  String to write to fd
+ */
 static inline void ssend(int fd, std::string output){
 	int len = output.size() * sizeof(char);
 	if(send(fd, output.c_str(), len, MSG_NOSIGNAL) < 0) throw SocketError(errno, std::string(__FILE__) + " - " + std::to_string(__LINE__));
 }
+/**
+ * @brief      Read from File Descriptor and Handle Input
+ *
+ * @param[in]  fd    Client Socket File Descriptor
+ */
 inline void handle_command(int fd){
 	static auto &s = store::getInst();
 	std::string cmd = std::to_string('\0');
@@ -95,12 +121,30 @@ inline void handle_command(int fd){
 		}
 	}
 }
-
+/**
+ * @brief      Functor called on when event happens on Socket (Called off of the
+ *             main thread – in this case on a thread in a thread pool allocated
+ *             by Thread Building Blocks Library)
+ */
 struct FNEvent{
+	//Client File Descriptor for Event
 	int fd;
+	//Is docket listening for new connections?
 	bool is_listen;
+	/**
+	 * @brief      Constructor for new Event Call
+	 *
+	 * @param[in]  _fd         File Descriptor
+	 * @param[in]  _is_listen  Indicates if Socket is Listening for Incoming
+	 *                         Connections
+	 */
 	FNEvent(int _fd, bool _is_listen): fd(_fd), is_listen(_is_listen){
 	}
+	/**
+	 * Call operator - accepts new client if FD is listening for new
+	 * connections, otherwise locks the file descriptor for reading & writing
+	 * then handles input on the descriptor
+	 */
 	int operator()(){
 		if(is_listen){
 			sockaddr_in remote;
@@ -115,7 +159,7 @@ struct FNEvent{
 		}else{
 			if(fd <= 0) throw ServerError(errno, std::string(__FILE__) + " - " + std::to_string(__LINE__));
 			struct flock lk;
-			lk.l_type = F_RDLCK;
+			lk.l_type = F_RDLCK | F_WRLCK;
 			lk.l_whence = SEEK_CUR;
 			lk.l_start = 0;
 			lk.l_len = 0;
@@ -130,7 +174,15 @@ struct FNEvent{
 
 
 
-
+/**
+ * @brief      Setup Listening Socket and Polling
+ *
+ * @param[in]  maxEvents  The maximum simultaneous events to catch when pollisng
+ * @param      listen_fd  The Socket File Descriptor which is Listening for New
+ *                        Connections
+ *
+ * @return     Polling File Descriptor
+ */
 inline int init( const int maxEvents, int &listen_fd ){
 	int epfd = epoll_create1(EPOLL_CLOEXEC);
 	if(epfd < 0) throw ServerError(errno, std::string(__FILE__) + " - " + std::to_string(__LINE__));
@@ -165,8 +217,16 @@ inline int init( const int maxEvents, int &listen_fd ){
     return epfd;
 }
 
+/**
+ * Thread Building Blocks Thread PooL (AKA Task Group)
+ */
 tbb::task_group tg;
 
+/**
+ * @brief      Kill Signal Caught - Cleanup and Quit
+ *
+ * @param[in]  actype  The Signal Type
+ */
 void terminate(int actype){
 	std::cout << "BLKCached is exiting..." << std::endl;
 	tg.wait();
@@ -174,6 +234,19 @@ void terminate(int actype){
 	quit = 1;
 }
 
+/**
+ * @brief      Main Run loop:
+ *             1. Set up socket and polling
+ *             2. Listen for connections
+ *             3. Repeatedly Poll for events on sockets controlled by the
+ *                process
+ *                3.1 Handle Socket Event off of the Main Thread
+ *                	3.1.a If Event was new connection, add connection to polling
+ *                	3.1.b if Event was not new connection, handle action
+ *             4. On Exit from run loop, finish tasks, close sockets, and exit
+ *
+ * @return     Zero if No Errors, Non-Zero On Error
+ */
 int main(){
 	signal(SIGTERM, terminate);
 	signal(SIGPIPE, SIG_IGN);
