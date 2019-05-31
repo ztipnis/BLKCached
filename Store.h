@@ -82,7 +82,7 @@ namespace BLKCACHE{
         //Get instance of Store
 		static auto &getInst(){
 			//initialize initial store
-			static auto inst = std::make_shared<Store>(new Store());
+			static std::shared_ptr<Store> inst(new Store());
 			//make atomic
 			static std::atomic<Store*> inst_atomic(inst.get());
 			//return atomic instance
