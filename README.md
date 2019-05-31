@@ -1,35 +1,26 @@
 # BLKCached
 PMEM Block Storage based in-memory database
 
-
-
 ## Table of Contents
 
-### [Files](##Files)
-
-#### 	[	Block](###Block.h)
-
-####		[	Store](###Store.h)
-
-#### 	[	configParser](###configParser.h)
-
-#### 	[	memory_*](###memory_*.h)
-
-#### 	[	Config](bds.conf)
-
-###[Appendinx](##Appendix)
-
-####[	Headers](###Code for Headers)
-
-#####[		Block.h](####Block.h)
-
-##### [		Store.h](####Store.h)
-
-##### [		configParser.h](####configParser.h)
-
-##### [		memory_debug.h](####memory_debug.h)
-
-##### [		memory_production.h](####memory_production.h)
+###[   BLKCached](#blkcached)
+####[      Files](#files)
+#####[         Block.h](#blockh)
+######[            Class Block](#class-block)
+######[            Struct RawMemory](#struct-rawmemory)
+#####[         Store.h](#storeh)
+######[            Class Store](#class-store)
+######[            Struct ref](#struct-ref)
+######[            Struct bref](#struct-bref)
+#####[         configParser.h](#configparserh)
+#####[         memory_*.h](#memory_h)
+#####[         bds.conf](#bdsconf)
+####[      Appendix](#appendix)
+#####[         Code for Headers](#code-for-headers)
+######[            Block.h](#blockh-1)
+#####[         Store.h](#storeh-1)
+######[            configParser.h](#configparserh-1)
+######[            memory_debug.h](#memory_debugh)
 
 ## Files
 
