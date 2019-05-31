@@ -23,9 +23,9 @@ addons:
 script:
   - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
   - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
-  - export CC=/usr/bin/gcc-6
-  - export CXX=/usr/bin/g++-6
-  - gcc -v && g++ -v && cmake --version
+  - export CC=/usr/local/bin/gcc
+  - export CXX=/usr/local/bin/g++
+  - /usr/local/bin/gcc -v && /usr/local/bin/g++ -v && cmake --version
   - mkdir build
   - cd build
   - cmake ..
