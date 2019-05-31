@@ -5,7 +5,10 @@ language:
 compiler:
   - gcc
 before_install:
+  - sudo add-apt-repository main -y
   - sudo add-apt-repository universe -y
+  - sudo add-apt-repository restricted -y
+  - sudo add-apt-repository multiverse -y
   - sudo apt-get update -q
   - sudo apt-get install -y pmdk libpmemblk-dev libtbb-dev
 addons:
