@@ -1,10 +1,12 @@
-dist: disco
+dist: cosmic
 sudo: required
 language:
   - cpp
 compiler:
   - gcc
 before_install:
+  - sudo add-apt-repository ppa:ubuntu/pmdk -y
+  - sudo apt-get update -q
   - sudo apt-get install -y libpmemblk-dev libtbb-dev
 addons:
   apt:
