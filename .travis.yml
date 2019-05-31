@@ -42,7 +42,7 @@ before_install:
   - sudo apt-get install -y libpmemblk-dev libtbb-dev
 
 script:
-  - $(which gcc-7) -v && $(which g++-7) -v && cmake --version
+  - gcc-8 -v && g++-8 -v && cmake --version
   - mkdir build
   - cd build
   - cmake ..

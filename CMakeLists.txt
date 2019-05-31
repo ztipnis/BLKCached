@@ -1,70 +1,31 @@
 cmake_minimum_required(VERSION 3.6)
-
+project(BLKCached)
 if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
     message( FATAL_ERROR "In-source builds not allowed. Please make a new directory and run CMake from there. You may need to remove CMakeCache.txt." )
 endif()
+add_subdirectory(src)
+# first we can indicate the documentation build as an option and set it to ON by default
+option(BUILD_DOC "Build documentation" ON)
 
-set(PROJECT_NAME BLKCached)
-project(${PROJECT_NAME})
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
 
-SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/bin
-        CACHE PATH
-        "Single Directory for all"
-    )
+# check if Doxygen is installed
+find_package(Doxygen REQUIRED dot)
+if (DOXYGEN_FOUND)
+    # set input and output files
+    set(DOXYGEN_IN ${CMAKE_CURRENT_SOURCE_DIR}/../docs/Doxyfile.in)
+    set(DOXYGEN_OUT ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile)
 
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/bin
-        CACHE PATH
-        "Single Directory for all"
-    )
+    # request to configure the file
+    configure_file(${DOXYGEN_IN} ${DOXYGEN_OUT} @ONLY)
+    message("Doxygen build started")
 
-SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/lib
-        CACHE PATH
-        "Single Directory for all"
-    )
-
-find_package(tbb REQUIRED)
-find_package(boost REQUIRED)
-find_package(pmemblk REQUIRED)
-
-
-target_include_directories(${PROJECT_NAME} ${tbb_INCLUDE_DIRS} ${boost_INCLUDE_DIRS} ${pmemblk_INCLUDE_DIRS} )
-
-# TODO: uncomment if have unit tests
-# enable_testing()
-
-find_program( CLANG_TIDY NAMES clang-tidy)
-# NOTE: you can add search paths for example `PATHS /usr/local/opt/llvm/bin/`
-
-message("\n--------------------------------\n")
-message("PROJECT NAME:\t\t${PROJECT_NAME}")
-message("CMAKE_SYSTEM_NAME:\t${CMAKE_SYSTEM_NAME}")
-message("CMAKE_C_COMPILER:\t${CMAKE_C_COMPILER}")
-message("CMAKE_CXX_COMPILER:\t${CMAKE_CXX_COMPILER}")
-message("CMAKE_GENERATOR:\t${CMAKE_GENERATOR}")
-message("CMAKE_BUILD_TYPE:\t${CMAKE_BUILD_TYPE}")
-message("CMAKE_BINARY_DIR:\t${CMAKE_BINARY_DIR}")
-message("CMAKE_MODULE_PATH:\t${CMAKE_MODULE_PATH}")
-message("CMAKE_PREFIX_PATH:\t${CMAKE_PREFIX_PATH}")
-message("clang-tidy:\t\t${CLANG_TIDY}")
-message("\n--------------------------------\n")
-
-
-
-set(${PROJECT_NAME}_sources main.cpp)
-
-add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_sources})
-
-# NOTE: this will slow down compilation, but you'll have static code analysis :)
-if(CLANG_TIDY)
-    set_property(
-        TARGET ${PROJECT_NAME}
-        PROPERTY CXX_CLANG_TIDY "${CLANG_TIDY}")
-endif()
-
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
-
-target_link_libraries(${PROJECT_NAME} ${tbb_LIBRARIES} ${boost_LIBRARIES} ${pmemblk_LIBRARIES} )
+    # note the option ALL which allows to build the docs together with the application
+    add_custom_target( documentation ALL
+        COMMAND ${DOXYGEN_EXECUTABLE} ${DOXYGEN_OUT}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM )
+else (DOXYGEN_FOUND)
+  message("Doxygen need to be installed to generate the doxygen documentation")
+endif (DOXYGEN_FOUND)
