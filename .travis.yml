@@ -1,30 +1,43 @@
 dist: cosmic
+
 sudo: required
+
 language:
   - cpp
+
+matrix:
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-7
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+
 compiler:
   - gcc
-before_install:
-  - sudo add-apt-repository main -y
-  - sudo add-apt-repository "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu cosmic main universe restricted multiverse InRelease" -y
-  - sudo add-apt-repository restricted -y
-  - sudo add-apt-repository multiverse -y
-  - sudo apt-get update -q
-  - sudo apt-get install -y libpmemblk-dev libtbb-dev
+
 addons:
   apt:
     update: true
     sources:
       - ubuntu-toolchain-r-test
     packages:
-      - gcc-6
-      - g++-6
       - cmake
+
+before_install:
+  - eval "${MATRIX_EVAL}"
+  - sudo add-apt-repository main -y
+  - sudo add-apt-repository "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu cosmic main universe restricted multiverse InRelease" -y
+  - sudo add-apt-repository restricted -y
+  - sudo add-apt-repository multiverse -y
+  - sudo apt-get update -q
+  - sudo apt-get install -y libpmemblk-dev libtbb-dev
+
 script:
-  - sudo ln -s /usr/bin/gcc-6 /usr/local/bin/gcc
-  - sudo ln -s /usr/bin/g++-6 /usr/local/bin/g++
-  - export CC=/usr/local/bin/gcc
-  - export CXX=/usr/local/bin/g++
   - /usr/local/bin/gcc -v && /usr/local/bin/g++ -v && cmake --version
   - mkdir build
   - cd build
