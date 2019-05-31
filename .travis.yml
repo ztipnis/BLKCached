@@ -1,4 +1,4 @@
-dist: cosmic
+dist: disco
 sudo: required
 language:
   - cpp
