@@ -10,7 +10,7 @@ before_install:
   - sudo add-apt-repository restricted -y
   - sudo add-apt-repository multiverse -y
   - sudo apt-get update -q
-  - sudo apt-get install -y pmdk libpmemblk-dev libtbb-dev
+  - sudo apt-get install -y libpmemblk-dev libtbb-dev
 addons:
   apt:
     update: true
