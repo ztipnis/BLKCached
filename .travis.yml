@@ -6,7 +6,7 @@ compiler:
   - gcc
 before_install:
   - sudo add-apt-repository main -y
-  - sudo add-apt-repository universe -y
+  - sudo add-apt-repository "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu xenial main universe restricted multiverse InRelease" -y
   - sudo add-apt-repository restricted -y
   - sudo add-apt-repository multiverse -y
   - sudo apt-get update -q
