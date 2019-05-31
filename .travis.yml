@@ -1,4 +1,4 @@
-dist: trusty
+dist: cosmic
 sudo: required
 language:
   - cpp
