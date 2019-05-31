@@ -1,3 +1,4 @@
+#pragma once
 #include <unordered_map>
 #include <set>
 #include <mutex>
@@ -21,6 +22,11 @@ extern std::unordered_map<std::string,std::string> config;
 namespace BLKCACHE{
 	template <unsigned long>
 	class Block;
+	/**
+	 * @brief      Class for store: Stores keys/value REFERENCES in a map. Handles storage of blocks.
+	 *
+	 * @tparam     BLOCK_SIZE  { description }
+	 */
 	template <unsigned long BLOCK_SIZE>
 	class Store{
 	private:
@@ -76,9 +82,9 @@ namespace BLKCACHE{
         //Get instance of Store
 		static auto &getInst(){
 			//initialize initial store
-			static Store* inst = new Store();
+			static auto inst = std::make_shared<Store>(new Store());
 			//make atomic
-			static std::atomic<Store*> inst_atomic(inst);
+			static std::atomic<Store*> inst_atomic(inst.get());
 			//return atomic instance
 			return inst_atomic;
 		}

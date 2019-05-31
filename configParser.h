@@ -1,10 +1,11 @@
 //config_parser
+#pragma once
+
 #include <string>
 #include <sstream>
 #include <fstream>
 #include <unordered_map>
 #include <algorithm>
-
 #ifndef BLKCACHE_CFG_PARSE
 #define BLKCACHE_CFG_PARSE
 /**
