@@ -28,6 +28,8 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - cmake
+      - gcc-7
+      - g++-7
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -39,7 +41,7 @@ before_install:
   - sudo apt-get install -y libpmemblk-dev libtbb-dev
 
 script:
-  - gcc-7 -v && g++-7 -v && cmake --version
+  - gcc -v && g++ -v && cmake --version
   - mkdir build
   - cd build
   - cmake ..
