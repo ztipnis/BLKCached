@@ -18,3 +18,9 @@ script:
   - cd build
   - cmake ..
   - make
+after_success:
+  - >-
+    if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" && "$TRAVIS_PULL_REQUEST" = "false" ]] ; then
+      cd $PROJECT_DIR_ABS
+      .ci/push_docs.sh || travis_terminate 1
+    fi
