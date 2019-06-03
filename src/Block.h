@@ -119,6 +119,11 @@ namespace BLKCACHE{
 
 	};
 
+	/**
+	 * @brief      Represents raw memory, in the form of a void pointer, as a C++ object
+	 *
+	 * @tparam     BLOCK_SIZE  The size of the block stored in memory
+	 */
 	template<unsigned long BLOCK_SIZE> 
 	struct Block<BLOCK_SIZE>::RawMemory{
 		void* mem;
