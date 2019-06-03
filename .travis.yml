@@ -22,6 +22,7 @@ after_success:
   - >-
     if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
       cd $PROJECT_DIR_ABS
+      ls -la
       ls .ci
       .ci/push_docs.sh || travis_terminate 1
     fi
