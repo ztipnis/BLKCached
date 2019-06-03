@@ -22,6 +22,7 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
    	cd ../../
    	git add --all html
     git commit -am "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -am "Commit: ${TRAVIS_COMMIT}"
+    set +e
     git push --set-upstream --force "git@github.com:ztipnis/BLKCached.git" > /dev/null 2>&1
 else
     echo '' >&2
