@@ -21,7 +21,7 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
     rsync -av html/ ../../html/
    	cd ../../
    	git add --all html
-    git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
+    git commit -am "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -am "Commit: ${TRAVIS_COMMIT}"
     git push --set-upstream --force "git@github.com:ztipnis/BLKCached.git" > /dev/null 2>&1
 else
     echo '' >&2
