@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/src/cmake)
+
 
 if ( ${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR} )
     message( FATAL_ERROR "In-source builds not allowed. Please make a new directory and run CMake from there. You may need to remove CMakeCache.txt." )
@@ -8,30 +10,10 @@ endif()
 set(PROJECT_NAME BLKCached)
 project(${PROJECT_NAME})
 
-SET (CMAKE_LIBRARY_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/bin
-        CACHE PATH
-        "Single Directory for all"
-    )
-
-SET (CMAKE_RUNTIME_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/bin
-        CACHE PATH
-        "Single Directory for all"
-    )
-
-SET (CMAKE_ARCHIVE_OUTPUT_DIRECTORY
-        ${PROJECT_BINARY_DIR}/lib
-        CACHE PATH
-        "Single Directory for all"
-    )
-
-find_package(tbb REQUIRED)
-find_package(boost REQUIRED)
+find_package(TBB REQUIRED)
+find_package(Boost COMPONENTS program_options filesystem REQUIRED)
 find_package(pmemblk REQUIRED)
 
-
-target_include_directories(${PROJECT_NAME} ${tbb_INCLUDE_DIRS} ${boost_INCLUDE_DIRS} ${pmemblk_INCLUDE_DIRS} )
 
 # TODO: uncomment if have unit tests
 # enable_testing()
@@ -57,6 +39,7 @@ message("\n--------------------------------\n")
 set(${PROJECT_NAME}_sources main.cpp)
 
 add_executable(${PROJECT_NAME} ${${PROJECT_NAME}_sources})
+target_include_directories(${PROJECT_NAME} PRIVATE ${TBB_INCLUDE_DIRS} PRIVATE ${Boost_INCLUDE_DIRS} PRIVATE ${libpmemblk_INCLUDES} )
 
 # NOTE: this will slow down compilation, but you'll have static code analysis :)
 if(CLANG_TIDY)
@@ -68,4 +51,10 @@ endif()
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED ON)
 
-target_link_libraries(${PROJECT_NAME} ${tbb_LIBRARIES} ${boost_LIBRARIES} ${pmemblk_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} ${TBB_LIBRARIES} ${Boost_LIBRARIES} ${libpmemblk_LIBRARIES} ${CMAKE_DL_LIBS} )
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/bds.conf ${CMAKE_CURRENT_BINARY_DIR}/bds.conf COPYONLY)
+add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+                ${CMAKE_SOURCE_DIR}/src/bds.conf
+                ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/bds.conf)

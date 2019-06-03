@@ -13,13 +13,18 @@
 #include "tbb/task_group.h"
 #include <sstream>
 #include <boost/algorithm/string.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/dll/runtime_symbol_info.hpp>
+#include <boost/program_options.hpp>
+#include <iostream>
 //#define DEBUG
 #define S_BLK DEFAULT_BLOCK_SIZE
 #include "Block.h"
 #include "configParser.h"
 #include "Store.h"
+#define VERSION "0.0.1"
 
-typedef BLKCACHE::Store<4096> store;
+//typedef BLKCACHE::Store<4096> store;
 /**
  * Has kill signal been caught? Atomic and volatile because set by signal not on
  * main thread
@@ -29,6 +34,14 @@ static volatile sig_atomic_t quit = 0;
 /**
  * @brief      Error Encountered When Setting up Server or Socket
  */
+
+template <class T>
+std::ostream& operator<<(std::ostream& os, const std::vector<T>& v)
+{
+    copy(v.begin(), v.end(), std::ostream_iterator<T>(std::cout, " "));
+    return os;
+}
+
 class ServerError : public virtual std::runtime_error{
 public:
 	ServerError() : std::runtime_error::runtime_error("Unknown Server Error") {}
@@ -83,7 +96,7 @@ static inline void ssend(int fd, std::string output){
  * @param[in]  fd    Client Socket File Descriptor
  */
 inline void handle_command(int fd){
-	static auto &s = store::getInst();
+	static auto &s = BLKCACHE::Store<4096>::getInst();
 	std::string cmd = std::to_string('\0');
 	cmd = srecv(fd);
 	std::stringstream cmds(cmd);
@@ -247,10 +260,61 @@ void terminate(int actype){
  *
  * @return     Zero if No Errors, Non-Zero On Error
  */
-int main(){
+int main(int argc, char* argv[]){
 	signal(SIGTERM, terminate);
 	signal(SIGPIPE, SIG_IGN);
-	parseConfig("bds.conf");
+	boost::filesystem::path loc = boost::dll::program_location();
+
+	boost::program_options::options_description opts("General");
+	opts.add_options()
+		("version,v", "Print version string")
+		("help,h", "Print command line help");
+	boost::program_options::options_description cfg("Configuration");
+	cfg.add_options()
+		("poolSize,s", "Size of Block Pool Stored on Disk (Defines maximum data stored to disk)")
+		("path,f", "Path to pool file")
+		("threads,j", "Maximum number of concurrent threads handling socket i/o")
+		("ip,i", "IP Address on which to listen")
+		("port,p", "Port on which to listen");
+	boost::program_options::options_description cmdln("Command Line");
+	cmdln.add_options()
+		("cfg,c","Path to config file");
+
+	boost::program_options::options_description clopts;
+	clopts.add(opts).add(cfg).add(cmdln);
+	boost::program_options::variables_map vm;
+	store(boost::program_options::command_line_parser(argc,argv).options(clopts).run(),vm);
+	notify(vm);
+	std::string cfgPath = vm.count("cfg") ? vm["cfg"].as<std::string>() : loc.parent_path().native()+"/bds.conf";
+	notify(vm);
+	parseConfig(cfgPath);
+	if(vm.count("version")){
+		std::cout << VERSION << std::endl;
+		return 0;
+	}
+	if(vm.count("help")){
+		std::cout << "Usage: " << argv[0] << " [options]" << std::endl;
+		std::cout << clopts << std::endl;
+		return 0;
+	}
+	if(vm.count("poolSize")){
+		config["poolSize"] = vm["poolSize"].as<std::string>();
+	}
+	if(vm.count("path")){
+		config["path"] = vm["path"].as<std::string>();
+	}
+	if(vm.count("threads")){
+		config["threads"] = vm["threads"].as<std::string>();
+	}
+	if(vm.count("ip")){
+		config["ip"] = vm["ip"].as<std::string>();
+	}
+	if(vm.count("port")){
+		config["port"] = vm["port"].as<std::string>();
+	}
+	if(config["path"].front() != '/'){
+		config["path"] = loc.parent_path().native() + "/" + config["path"];
+	}
 	std::cout << "BLKCached running on port: " << config["port"] << "..." << std::endl;
 	try{
 		int listen_fd = -1;
