@@ -3,7 +3,7 @@
 echo 'Setting up the script...'
 # Exit with nonzero exit code if anything fails
 set -e
-
+cd build/documentation
 git config --global push.default simple
 # Pretend to be an user called Travis CI.
 git config user.name "Travis CI"
