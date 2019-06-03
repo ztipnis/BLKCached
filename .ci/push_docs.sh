@@ -19,7 +19,6 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
     git checkout gh-pages
     ls
     rsync -av html/ ../../html/
-   	mv html ../../
    	cd ../../
    	git add --all html
     git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
