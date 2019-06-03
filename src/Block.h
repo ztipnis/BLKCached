@@ -28,7 +28,6 @@ namespace BLKCACHE{
 	/**
 	 * @brief      Store Class
 	 */
-		friend class Store<BLOCK_SIZE>;
 		private:
 			long long blockno; //number of the block within the segments (used by PMDK)
 			size_t size; //total size of the objects represented by the block
@@ -39,6 +38,7 @@ namespace BLKCACHE{
 			std::mutex blkMTX; //mutex - ensures concurrent write requests don't currupt the data
 			~Block(){};
 		public:
+			friend class Store<BLOCK_SIZE>;
 			/**
 			 * @brief      Represents raw memory (void pointer) which is described by this block object
 			 */
