@@ -22,18 +22,14 @@ namespace BLKCACHE{
 	 *             writing changes to disk
 	 *
 	 * @tparam     BLOCK_SIZE  Length of blocks to allocate (bytes)
+	 * 
 	 */
 	template <unsigned long BLOCK_SIZE>  class Block{
+	/**
+	 * @brief      Store Class
+	 */
 		friend class Store<BLOCK_SIZE>;
 		private:
-			/**
-			 * @brief      Represents raw memory (void pointer) which is described by this block object
-			 */
-			struct RawMemory{
-				void* mem;
-				RawMemory();
-				virtual ~RawMemory();
-			};
 			long long blockno; //number of the block within the segments (used by PMDK)
 			size_t size; //total size of the objects represented by the block
 			std::weak_ptr<RawMemory> raw; //pointer to the raw memory object that is stored by the block. Auto handles constructors and desctructors
@@ -43,6 +39,14 @@ namespace BLKCACHE{
 			std::mutex blkMTX; //mutex - ensures concurrent write requests don't currupt the data
 			~Block(){};
 		public:
+			/**
+			 * @brief      Represents raw memory (void pointer) which is described by this block object
+			 */
+			struct RawMemory{
+				void* mem;
+				RawMemory();
+				virtual ~RawMemory();
+			};
 			typedef struct RawMemory RawMemory;
 			/**
 			 * @brief      Creates a block
