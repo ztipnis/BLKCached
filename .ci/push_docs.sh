@@ -18,10 +18,12 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
     git fetch origin gh-pages:gh-pages
     git checkout gh-pages
     ls
-   	mv build/documentation/html .
+    rsync -av html/ ../../html/
+   	mv html ../../
+   	cd ../../
    	git add --all html
     git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
-    git push --set-upstream --force "git@github.com:$GH_REPO_ORG/$GH_REPO_NAME.git" > /dev/null 2>&1
+    git push --set-upstream --force "git@github.com:ztipnis/BLKCached.git" > /dev/null 2>&1
 else
     echo '' >&2
     echo 'Warning: No documentation (html) files have been found!' >&2
