@@ -1,28 +1,33 @@
-dist: cosmic
-
-sudo: required
-
-language:
-  - cpp
-
+os: linux
+dist: xenial
+sudo: false
+language: cpp
 compiler: gcc
-
-before_install:
-  - eval "${MATRIX_EVAL}"
-  - sudo add-apt-repository "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu cosmic main universe InRelease" -y
-  - sudo apt-get update -q
-  - sudo apt-get install --no-install-recommends -q --no-upgrade --autoremove -y libpmemblk-dev libtbb-dev libboost-all-dev doxygen
+addons:
+  apt:
+    update: true
+    sources:
+      - sourceline: "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu cosmic main universe InRelease"
+      - ubuntu-toolchain-r-test
+    packages:
+      - libboost-all-dev
+      - doxygen
+      - libpmemblk-dev
+      - libtbb-dev
+cache:
+  apt: true
 
 script:
   - mkdir build
   - cd build
   - cmake ..
   - make
-after_success:
-  - >-
-    if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
-      cd ..
-      chmod +x ./.ci/push_docs.sh
-      ls .ci
-      .ci/push_docs.sh || travis_terminate 1
-    fi
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  local_dir: build/documentation/html
+  github_token: 4d426cebc8fdff2cac32b93033e87698ac59b948
+  on:
+    branch: master
+
