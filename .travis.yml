@@ -25,7 +25,6 @@ matrix:
 
 addons:
   apt:
-    update: true
     sources:
       - ubuntu-toolchain-r-test
     packages:
@@ -34,10 +33,7 @@ addons:
 
 before_install:
   - eval "${MATRIX_EVAL}"
-  - sudo add-apt-repository main -y
-  - sudo add-apt-repository "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu cosmic main universe restricted multiverse InRelease" -y
-  - sudo add-apt-repository restricted -y
-  - sudo add-apt-repository multiverse -y
+  - sudo add-apt-repository "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu cosmic universe InRelease" -y
   - sudo apt-get update -q
   - sudo apt-get install -y libpmemblk-dev libtbb-dev libboost-all-dev doxygen
 
