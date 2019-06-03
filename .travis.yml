@@ -20,7 +20,8 @@ script:
   - make
 after_success:
   - >-
-    if [[ "$TRAVIS_BRANCH" = "master" && -n "$TRAVIS_BUILD_DOCS" && "$TRAVIS_PULL_REQUEST" = "false" ]] ; then
+    if [[ "$TRAVIS_BRANCH" = "master"]] ; then
       cd $PROJECT_DIR_ABS
+      ls .ci
       .ci/push_docs.sh || travis_terminate 1
     fi
