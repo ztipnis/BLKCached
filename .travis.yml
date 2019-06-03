@@ -22,7 +22,7 @@ after_success:
   - >-
     if [[ "$TRAVIS_BRANCH" = "master" ]] ; then
       cd ..
-      ls -la
+      chmod +x ./.ci/push_docs.sh
       ls .ci
       .ci/push_docs.sh || travis_terminate 1
     fi
