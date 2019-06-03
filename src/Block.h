@@ -29,8 +29,10 @@ namespace BLKCACHE{
 	 * @brief      Store Class
 	 */
 		private:
+			struct RawMemory;
 			long long blockno; //number of the block within the segments (used by PMDK)
 			size_t size; //total size of the objects represented by the block
+			std::weak_ptr<RawMemory> raw; //pointer to the raw memory object that is stored by the block. Auto handles constructors and desctructors
 			void (&getter)(long long, void*); //pointer to function to fetch the data from the disk
 			void (&setter)(long long, void*); //pointer to function to store the data to the disk
 			ssize_t free_space; //total free space remaining in the block
@@ -38,18 +40,7 @@ namespace BLKCACHE{
 			~Block(){};
 		public:
 			friend class Store<BLOCK_SIZE>;
-			/**
-			 * @brief      Represents raw memory (void pointer) which is described by this block object
-			 */
-			struct RawMemory{
-				void* mem;
-				RawMemory();
-				virtual ~RawMemory();
-			};
 			typedef struct RawMemory RawMemory;
-		private:
-			std::weak_ptr<RawMemory> raw; //pointer to the raw memory object that is stored by the block. Auto handles constructors and desctructors
-		public:
 			/**
 			 * @brief      Creates a block
 			 *
@@ -127,7 +118,14 @@ namespace BLKCACHE{
 			std::shared_ptr<RawMemory> lock();
 
 	};
-
+	/**
+	 * @brief      Represents raw memory (void pointer) which is described by this block object
+	 */
+	struct RawMemory{
+		void* mem;
+		RawMemory();
+		virtual ~RawMemory();
+	};
 	/**
 	 * @brief      Initialise Raw Memory;
 	 *
