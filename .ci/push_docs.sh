@@ -16,7 +16,7 @@ GH_REPO_REF="github.com/$GH_REPO_ORG/$GH_REPO_NAME.git"
 if [ -d "html" ] && [ -f "html/index.html" ]; then
     echo 'Uploading documentation to the gh-pages branch...'
     git fetch
-    git checkout -b gh-pages origin/gh-pages html/*
+    git checkout -b gh-pages origin/gh-pages
    	cd html
    	git add --all
     git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
