@@ -17,6 +17,7 @@ if [ -d "html" ] && [ -f "html/index.html" ]; then
     echo 'Uploading documentation to the gh-pages branch...'
     git fetch origin gh-pages:gh-pages
     git checkout gh-pages
+    ls
    	mv build/documentation/html .
    	git add --all html
     git commit -m "Deploy code docs to GitHub Pages Travis build: ${TRAVIS_BUILD_NUMBER}" -m "Commit: ${TRAVIS_COMMIT}"
