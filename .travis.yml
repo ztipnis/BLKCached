@@ -5,31 +5,7 @@ sudo: required
 language:
   - cpp
 
-install: sudo apt-get install gcc-8 g++-8
 compiler: gcc
-
-matrix:
-  include:
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - ubuntu-toolchain-r-test
-          packages:
-            - gcc-8
-            - g++-8
-      env:
-        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
-
-
-
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-    packages:
-      - gcc-8
-      - g++-8
 
 before_install:
   - eval "${MATRIX_EVAL}"
@@ -38,7 +14,6 @@ before_install:
   - sudo apt-get install -y libpmemblk-dev libtbb-dev libboost-all-dev doxygen
 
 script:
-  - gcc-8 -v && g++-8 -v && cmake --version
   - mkdir build
   - cd build
   - cmake ..
