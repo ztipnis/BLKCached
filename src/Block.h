@@ -118,10 +118,9 @@ namespace BLKCACHE{
 			std::shared_ptr<RawMemory> lock();
 
 	};
-	/**
-	 * @brief      Represents raw memory (void pointer) which is described by this block object
-	 */
-	struct RawMemory{
+
+	template<unsigned long BLOCK_SIZE> 
+	struct Block<BLOCK_SIZE>::RawMemory{
 		void* mem;
 		RawMemory();
 		virtual ~RawMemory();
