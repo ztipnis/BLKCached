@@ -23,7 +23,7 @@ cache:
 
 script:
   - virtualenv -p $(which python3) py3env
-  - source py3env
+  - source py3env/bin/activate
   - pip install breathe
   - mkdir build
   - cd build
