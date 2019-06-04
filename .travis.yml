@@ -14,10 +14,12 @@ addons:
       - doxygen
       - libpmemblk-dev
       - libtbb-dev
+      - python3-sphinx
 cache:
   apt: true
 
 script:
+  - pip install breathe
   - mkdir build
   - cd build
   - cmake ..
@@ -26,7 +28,7 @@ script:
 deploy:
   provider: pages
   skip_cleanup: true
-  local_dir: build/documentation/html
+  local_dir: build/docs/docs/sphinx
   github_token: 4d426cebc8fdff2cac32b93033e87698ac59b948
   on:
     branch: master
