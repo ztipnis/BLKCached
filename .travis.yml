@@ -16,12 +16,15 @@ addons:
       - libpmemblk-dev
       - libtbb-dev
       - python3.6
+      - virtualenv
       - python3-sphinx
 cache:
   apt: true
 
 script:
-  - pip3 install breathe
+  - virtualenv -p $(which python3) py3env
+  - source py3env
+  - pip install breathe
   - mkdir build
   - cd build
   - cmake ..
