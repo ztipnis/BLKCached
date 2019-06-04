@@ -10,7 +10,8 @@ addons:
       - sourceline: "deb http://us-east-1.ec2.archive.ubuntu.com/ubuntu cosmic main universe InRelease"
       - ubuntu-toolchain-r-test
     packages:
-      - libboost-all-dev
+      - libboost-program-options-dev
+      - libboost-filesystem-dev
       - doxygen
       - libpmemblk-dev
       - libtbb-dev
@@ -19,7 +20,7 @@ cache:
   apt: true
 
 script:
-  - pip install breathe
+  - pip3 install breathe
   - mkdir build
   - cd build
   - cmake ..
@@ -29,7 +30,7 @@ deploy:
   provider: pages
   skip_cleanup: true
   local_dir: build/docs/docs/sphinx
-  github_token: 4d426cebc8fdff2cac32b93033e87698ac59b948
+  github_token: $API_TOKEN
   on:
     branch: master
 
