@@ -3,8 +3,8 @@
 [![Build Status](https://travis-ci.com/ztipnis/BLKCached.svg?token=4hGLqJR7tjfwfUvVUMxd&branch=master)](https://travis-ci.com/ztipnis/BLKCached)
 
 ## Intro
-BLKCached was created in response to _IBM Research_'s Paper _["Reaping the performance of fast NVM storage
-with uDepot"](https://www.usenix.org/system/files/fast19-kourtis.pdf)_. The goal of this project was to, like _uDepot_, create a drop-in replacement for _memcached_, but to simplify the API, and to tune for performance. Unlike _uDepot_ the goal of BLKCached is to provide a proof-of-concept for the use of block-addressable DRAM in the in-memory database sector. The hope is that, in time, block-addressable DRAM (accessible via either PCIe, DIMM or other northbridge ports) will provide more affordable, reliable and fast storage solutions. 
+BLKCached was created in response to _IBM Research_'s Paper [_"Reaping the performance of fast NVM storage
+with uDepot"_](https://www.usenix.org/system/files/fast19-kourtis.pdf). The goal of this project was to, like _uDepot_, create a drop-in replacement for _memcached_, but to simplify the API, and to tune for performance. Unlike _uDepot_ the goal of BLKCached is to provide a proof-of-concept for the use of block-addressable DRAM in the in-memory database sector. The hope is that, in time, block-addressable DRAM (accessible via either PCIe, DIMM or other northbridge ports) will provide more affordable, reliable and fast storage solutions. 
 
 ## Installation
 ~~~bash
