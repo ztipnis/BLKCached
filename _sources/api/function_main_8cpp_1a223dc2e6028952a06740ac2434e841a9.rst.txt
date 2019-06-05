@@ -1,0 +1,13 @@
+.. _exhale_function_main_8cpp_1a223dc2e6028952a06740ac2434e841a9:
+
+Function init
+=============
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: init(const int, int&)

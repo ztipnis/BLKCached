@@ -1,0 +1,13 @@
+.. _exhale_variable_main_8cpp_1a0b6d3439424a03ac9ad9ea40abb12021:
+
+Variable quit
+=============
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: quit

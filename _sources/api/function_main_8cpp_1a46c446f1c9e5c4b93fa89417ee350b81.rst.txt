@@ -1,0 +1,13 @@
+.. _exhale_function_main_8cpp_1a46c446f1c9e5c4b93fa89417ee350b81:
+
+Function ssend
+==============
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: ssend(int, std::string)

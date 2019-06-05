@@ -1,0 +1,13 @@
+.. _exhale_define_Store_8h_1ac42c901b241f3189fb2451bfea993e1a:
+
+Define DEFAULT_BLOCK_SIZE
+=========================
+
+- Defined in :ref:`file_src_Store.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: DEFAULT_BLOCK_SIZE

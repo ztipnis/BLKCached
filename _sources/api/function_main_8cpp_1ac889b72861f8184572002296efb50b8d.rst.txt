@@ -1,0 +1,13 @@
+.. _exhale_function_main_8cpp_1ac889b72861f8184572002296efb50b8d:
+
+Function srecv
+==============
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: srecv(int)

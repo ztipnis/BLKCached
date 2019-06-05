@@ -1,0 +1,13 @@
+.. _exhale_function_configParser_8h_1a428454b854f47a20f2c02ace3333d568:
+
+Function parseConfig
+====================
+
+- Defined in :ref:`file_src_configParser.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: parseConfig(std::string)

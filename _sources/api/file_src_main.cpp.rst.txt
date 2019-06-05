@@ -1,0 +1,127 @@
+
+.. _file_src_main.cpp:
+
+File main.cpp
+=============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/main.cpp``)
+-----------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_main.cpp.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``Block.h`` (:ref:`file_src_Block.h`)
+
+- ``Store.h`` (:ref:`file_src_Store.h`)
+
+- ``boost/algorithm/string.hpp``
+
+- ``boost/dll/runtime_symbol_info.hpp``
+
+- ``boost/filesystem.hpp``
+
+- ``boost/program_options.hpp``
+
+- ``cerrno``
+
+- ``configParser.h`` (:ref:`file_src_configParser.h`)
+
+- ``csignal``
+
+- ``cstring``
+
+- ``fcntl.h``
+
+- ``iostream``
+
+- ``netinet/in.h``
+
+- ``sstream``
+
+- ``stdexcept``
+
+- ``sys/epoll.h``
+
+- ``sys/socket.h``
+
+- ``sys/types.h``
+
+- ``tbb/task_group.h``
+
+- ``tbb/task_scheduler_init.h``
+
+- ``unistd.h``
+
+
+
+
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structFNEvent`
+
+- :ref:`exhale_class_classServerError`
+
+- :ref:`exhale_class_classSocketError`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_main_8cpp_1acebbcd333f6faab79e25811f87af4b58`
+
+- :ref:`exhale_function_main_8cpp_1a223dc2e6028952a06740ac2434e841a9`
+
+- :ref:`exhale_function_main_8cpp_1a0ddf1224851353fc92bfbff6f499fa97`
+
+- :ref:`exhale_function_main_8cpp_1a4b8db62a17e01a839e499a4c59112df5`
+
+- :ref:`exhale_function_main_8cpp_1ac889b72861f8184572002296efb50b8d`
+
+- :ref:`exhale_function_main_8cpp_1a46c446f1c9e5c4b93fa89417ee350b81`
+
+- :ref:`exhale_function_main_8cpp_1a7f9e2c181888c76092959985c030835e`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_main_8cpp_1a12c2040f25d8e3a7b9e1c2024c618cb6`
+
+- :ref:`exhale_define_main_8cpp_1ae151b4278e59bb3f5ae7fe83afd1b259`
+
+- :ref:`exhale_define_main_8cpp_1a1c6d5de492ac61ad29aec7aa9a436bbf`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_main_8cpp_1a0b6d3439424a03ac9ad9ea40abb12021`
+
+- :ref:`exhale_variable_main_8cpp_1a28ec3a2109956fbedb08c03e6d8cbb99`
+

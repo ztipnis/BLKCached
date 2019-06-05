@@ -1,0 +1,13 @@
+.. _exhale_define_main_8cpp_1ae151b4278e59bb3f5ae7fe83afd1b259:
+
+Define S_BLK
+============
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: S_BLK

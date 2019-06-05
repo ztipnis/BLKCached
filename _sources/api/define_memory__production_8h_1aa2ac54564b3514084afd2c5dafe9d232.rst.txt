@@ -1,0 +1,13 @@
+.. _exhale_define_memory__production_8h_1aa2ac54564b3514084afd2c5dafe9d232:
+
+Define POOL_SIZE
+================
+
+- Defined in :ref:`file_src_memory_production.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: POOL_SIZE

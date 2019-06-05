@@ -1,0 +1,84 @@
+
+.. _file_src_memory_production.h:
+
+File memory_production.h
+========================
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/memory_production.h``)
+----------------------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_memory_production.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``configParser.h`` (:ref:`file_src_configParser.h`)
+
+- ``libpmemblk.h``
+
+- ``string``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_Store.h`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_BLKCACHE`
+
+- :ref:`namespace_BLKCACHE__MEMORY`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_class_classBLKCACHE_1_1MEMORY_1_1PMEMBlock`
+
+
+Functions
+---------
+
+
+- :ref:`exhale_function_memory__production_8h_1a9e7f048193c6e2d6d7cb809c9a450827`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_memory__production_8h_1aa2ac54564b3514084afd2c5dafe9d232`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_memory__production_8h_1a83a3aedc9ee9c63d49f68385730366ed`
+

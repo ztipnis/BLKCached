@@ -1,0 +1,26 @@
+.. _exhale_class_classBLKCACHE_1_1Block:
+
+Template Class Block
+====================
+
+- Defined in :ref:`file_src_Block.h`
+
+
+Nested Relationships
+--------------------
+
+
+Nested Types
+************
+
+- :ref:`exhale_struct_structBLKCACHE_1_1Block_1_1RawMemory`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: BLKCACHE::Block
+   :members:
+   :protected-members:
+   :undoc-members:

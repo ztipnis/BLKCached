@@ -1,0 +1,24 @@
+
+.. _program_listing_file_src_memory_debug.h:
+
+Program Listing for File memory_debug.h
+=======================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_memory_debug.h>` (``src/memory_debug.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   #pragma once
+   namespace BLKCACHE{
+       namespace MEMORY{
+           static void* mem = malloc(DEFAULT_BLOCK_SIZE);
+           void set(long long bno, void* rawm){
+               std::memcpy(mem, rawm, DEFAULT_BLOCK_SIZE);
+           }
+           void get(long long bno, void* rawm){
+               std::memcpy(rawm, mem, DEFAULT_BLOCK_SIZE);
+           }
+       }
+   }

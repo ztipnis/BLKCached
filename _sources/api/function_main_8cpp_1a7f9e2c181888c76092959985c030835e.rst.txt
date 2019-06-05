@@ -1,0 +1,13 @@
+.. _exhale_function_main_8cpp_1a7f9e2c181888c76092959985c030835e:
+
+Function terminate
+==================
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: terminate(int)

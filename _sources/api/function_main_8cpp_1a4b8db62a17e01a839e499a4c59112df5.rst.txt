@@ -1,0 +1,13 @@
+.. _exhale_function_main_8cpp_1a4b8db62a17e01a839e499a4c59112df5:
+
+Template Function operator<<
+============================
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: operator<<(std::ostream&, const std::vector<T>&)

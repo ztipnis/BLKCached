@@ -1,0 +1,22 @@
+.. _exhale_struct_structBLKCACHE_1_1Store_1_1ref:
+
+Struct Store::ref
+=================
+
+- Defined in :ref:`file_src_Store.h`
+
+
+Nested Relationships
+--------------------
+
+This struct is a nested type of :ref:`exhale_class_classBLKCACHE_1_1Store`.
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: BLKCACHE::Store::ref
+   :members:
+   :protected-members:
+   :undoc-members:

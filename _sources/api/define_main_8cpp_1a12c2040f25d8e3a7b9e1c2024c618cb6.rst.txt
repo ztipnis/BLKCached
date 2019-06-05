@@ -1,0 +1,13 @@
+.. _exhale_define_main_8cpp_1a12c2040f25d8e3a7b9e1c2024c618cb6:
+
+Define INF
+==========
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: INF

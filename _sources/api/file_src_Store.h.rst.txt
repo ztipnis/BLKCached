@@ -1,0 +1,87 @@
+
+.. _file_src_Store.h:
+
+File Store.h
+============
+
+|exhale_lsh| :ref:`Parent directory <dir_src>` (``src``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. contents:: Contents
+   :local:
+   :backlinks: none
+
+Definition (``src/Store.h``)
+----------------------------
+
+
+.. toctree::
+   :maxdepth: 1
+
+   program_listing_file_src_Store.h.rst
+
+
+
+
+
+Includes
+--------
+
+
+- ``atomic``
+
+- ``memory_production.h`` (:ref:`file_src_memory_production.h`)
+
+- ``mutex``
+
+- ``set``
+
+- ``unordered_map``
+
+
+
+Included By
+-----------
+
+
+- :ref:`file_src_main.cpp`
+
+
+
+
+Namespaces
+----------
+
+
+- :ref:`namespace_BLKCACHE`
+
+
+Classes
+-------
+
+
+- :ref:`exhale_struct_structBLKCACHE_1_1Store_1_1bref`
+
+- :ref:`exhale_struct_structBLKCACHE_1_1Store_1_1ref`
+
+- :ref:`exhale_class_classBLKCACHE_1_1Block`
+
+- :ref:`exhale_class_classBLKCACHE_1_1Store`
+
+
+Defines
+-------
+
+
+- :ref:`exhale_define_Store_8h_1a8da81f44cb2c509b9c67fa3f29986c9c`
+
+- :ref:`exhale_define_Store_8h_1ac42c901b241f3189fb2451bfea993e1a`
+
+
+Variables
+---------
+
+
+- :ref:`exhale_variable_Store_8h_1a83a3aedc9ee9c63d49f68385730366ed`
+

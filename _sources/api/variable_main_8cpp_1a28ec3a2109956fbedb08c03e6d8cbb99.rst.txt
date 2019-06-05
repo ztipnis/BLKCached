@@ -1,0 +1,13 @@
+.. _exhale_variable_main_8cpp_1a28ec3a2109956fbedb08c03e6d8cbb99:
+
+Variable tg
+===========
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: tg

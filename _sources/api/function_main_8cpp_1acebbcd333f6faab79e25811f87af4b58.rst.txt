@@ -1,0 +1,13 @@
+.. _exhale_function_main_8cpp_1acebbcd333f6faab79e25811f87af4b58:
+
+Function handle_command
+=======================
+
+- Defined in :ref:`file_src_main.cpp`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: handle_command(int)

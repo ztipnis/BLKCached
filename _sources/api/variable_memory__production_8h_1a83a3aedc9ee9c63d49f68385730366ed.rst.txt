@@ -1,0 +1,13 @@
+.. _exhale_variable_memory__production_8h_1a83a3aedc9ee9c63d49f68385730366ed:
+
+Variable config
+===============
+
+- Defined in :ref:`file_src_memory_production.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: config

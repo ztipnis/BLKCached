@@ -1,0 +1,13 @@
+.. _exhale_variable_memory__debug_8h_1ae8de5fcd44626d4f05d9f39a750f806c:
+
+Variable BLKCACHE::MEMORY::mem
+==============================
+
+- Defined in :ref:`file_src_memory_debug.h`
+
+
+Variable Documentation
+----------------------
+
+
+.. doxygenvariable:: BLKCACHE::MEMORY::mem

@@ -1,0 +1,13 @@
+.. _exhale_function_memory__production_8h_1a9e7f048193c6e2d6d7cb809c9a450827:
+
+Function BLKCACHE::MEMORY::blk
+==============================
+
+- Defined in :ref:`file_src_memory_production.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: BLKCACHE::MEMORY::blk(nullptr)

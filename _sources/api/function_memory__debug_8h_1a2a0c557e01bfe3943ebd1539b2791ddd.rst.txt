@@ -1,0 +1,13 @@
+.. _exhale_function_memory__debug_8h_1a2a0c557e01bfe3943ebd1539b2791ddd:
+
+Function BLKCACHE::MEMORY::get
+==============================
+
+- Defined in :ref:`file_src_memory_debug.h`
+
+
+Function Documentation
+----------------------
+
+
+.. doxygenfunction:: BLKCACHE::MEMORY::get(long long, void *)

@@ -1,0 +1,165 @@
+
+.. _program_listing_file_src_Block.h:
+
+Program Listing for File Block.h
+================================
+
+|exhale_lsh| :ref:`Return to documentation for file <file_src_Block.h>` (``src/Block.h``)
+
+.. |exhale_lsh| unicode:: U+021B0 .. UPWARDS ARROW WITH TIP LEFTWARDS
+
+.. code-block:: cpp
+
+   //Block.h
+   #pragma once
+   
+   #include <string>
+   #include <iostream>
+   #include <vector>
+   #include <time.h>
+   #include <mutex>
+   
+   #ifndef BLKCACHE_BLOCK
+   #define BLKCACHE_BLOCK
+   
+   #ifndef DEFAULT_BLOCK_SIZE
+   #define DEFAULT_BLOCK_SIZE 4096
+   #endif
+   namespace BLKCACHE{
+       template <unsigned long> class Store;
+       template <unsigned long BLOCK_SIZE>  class Block{
+           private:
+               struct RawMemory;
+               long long blockno; //number of the block within the segments (used by PMDK)
+               size_t size; //total size of the objects represented by the block
+               std::weak_ptr<RawMemory> raw; //pointer to the raw memory object that is stored by the block. Auto handles constructors and desctructors
+               void (&getter)(long long, void*); //pointer to function to fetch the data from the disk
+               void (&setter)(long long, void*); //pointer to function to store the data to the disk
+               ssize_t free_space; //total free space remaining in the block
+               std::mutex blkMTX; //mutex - ensures concurrent write requests don't currupt the data
+               ~Block(){};
+           public:
+               friend class Store<BLOCK_SIZE>;
+               typedef struct RawMemory RawMemory;
+               Block(long long block, void (&_getter)(long long, void*) , void (&_setter)(long long, void*) ): setter(_setter), getter(_getter), blockno(block), size(BLOCK_SIZE), free_space(BLOCK_SIZE){}
+               std::string get(size_t offset);
+               ssize_t put(std::string s);
+               std::string del(size_t offset);
+               size_t getFreeSpace() const{
+                   return free_space;
+               }
+               bool operator<(const Block<BLOCK_SIZE>& b) const{
+                   return (free_space < b.free_space);
+               }
+               bool operator<(const size_t b) const{
+                   return (free_space < b);
+               }
+               bool operator>(const Block<BLOCK_SIZE>& b) const{
+                   return (free_space > b.free_space);
+               }
+               bool operator>=(const Block<BLOCK_SIZE>& b) const{
+                   return !(free_space >= b.free_space);
+               }
+               bool operator<=(const Block<BLOCK_SIZE>& b) const{
+                   return !(free_space <= b.free_space);
+               }
+           private:
+               void print_stack() const{
+                   auto start = lock();
+                   std::cout << ((char*) start->mem) << std::endl;
+               }
+               void write(std::shared_ptr<RawMemory> lock_ptr);
+               std::shared_ptr<RawMemory> lock();
+   
+       };
+   
+       template<unsigned long BLOCK_SIZE> 
+       struct Block<BLOCK_SIZE>::RawMemory{
+           void* mem;
+           RawMemory();
+           virtual ~RawMemory();
+       };
+       template<unsigned long BLOCK_SIZE> Block<BLOCK_SIZE>::RawMemory::RawMemory(){
+           mem = malloc(BLOCK_SIZE);
+       }
+       template<unsigned long BLOCK_SIZE> Block<BLOCK_SIZE>::RawMemory::~RawMemory(){
+           free(mem);
+       }
+   
+       template<unsigned long BLOCK_SIZE>
+       std::string Block<BLOCK_SIZE>::get(size_t offset){
+           std::lock_guard<std::mutex> lg(blkMTX);
+           auto start = lock();
+           size_t sndOffset = offset;
+           while(sndOffset < (size) && *(((char*)start->mem) + sndOffset) != '\0' && *(((char*)start->mem) + sndOffset) != char(30))
+               sndOffset += sizeof(char);
+           size_t chrln = (sndOffset - offset) / sizeof(char);
+           char* c = new char[chrln + 1];
+           std::memcpy(c, (((char*)start->mem) + offset), sndOffset - offset);
+           c[chrln] = '\0';
+           std::string s(c);
+           delete[] c;
+           return s;
+       }
+       template<unsigned long BLOCK_SIZE>
+       ssize_t Block<BLOCK_SIZE>::put(std::string s){
+           std::lock_guard<std::mutex> lgb(blkMTX);
+           auto start = lock();
+           size_t i = 0;
+           if((s.length() + 1)*sizeof(char) > free_space) return -1; //wont fit
+           while(i < size && *(((char*)start->mem) + i) != '\0') i+= sizeof(char);
+           size_t st_offset = i;
+           for(int j = 0; j < s.length(); j++){
+               *(((char*)start->mem) + i) = s.c_str()[j];
+               i += sizeof(char);
+           }
+           if(i < size - 1){
+               *(((char*)start->mem) + i) = char(30);
+           }
+           free_space -= (s.length()+1) * sizeof(char);
+           write(start);
+           raw = start;
+           return st_offset;
+       }
+       template<unsigned long BLOCK_SIZE>
+       std::string Block<BLOCK_SIZE>::del(size_t offset){
+           std::lock_guard<std::mutex> lgb(blkMTX);
+           auto start = lock();
+           auto start2 = std::make_shared<RawMemory>();
+           std::memcpy(start2->mem, start->mem, offset);
+           size_t sndOffset = offset;
+           while(sndOffset < (size) && *(((char*)start->mem) + sndOffset) != '\0' && *(((char*)start->mem) + sndOffset) != char(30))
+               sndOffset += sizeof(char);
+           std::memcpy(((char*) start2->mem) + offset, ((char*) start->mem) + sndOffset, BLOCK_SIZE - sndOffset);
+           free_space += sndOffset - offset + 1;
+           write(start2);
+           raw = start2;
+           size_t chrln = (sndOffset - offset) / sizeof(char);
+           char* c = new char[chrln + 1];
+           std::memcpy(c, (((char*)start->mem) + offset), sndOffset - offset);
+           c[chrln] = '\0';
+           std::string s(c);
+           delete[] c;
+           return s;
+       }
+       template<unsigned long BLOCK_SIZE>
+       void Block<BLOCK_SIZE>::write(std::shared_ptr<RawMemory> lock_ptr){
+           if(!lock_ptr) return;
+           static std::mutex fileMTX;
+           std::lock_guard<std::mutex> lgf(fileMTX);
+           setter(blockno, lock_ptr->mem);
+       }
+   
+   
+       template<unsigned long BLOCK_SIZE>
+       std::shared_ptr<typename Block<BLOCK_SIZE>::RawMemory > Block<BLOCK_SIZE>::lock(){
+           static std::mutex fileMTX;
+           std::lock_guard<std::mutex> lgf(fileMTX);
+           if(auto ptr = raw.lock()){return ptr;}
+           auto ptr = std::make_shared<RawMemory>();
+           getter(blockno, ptr->mem);
+           raw = ptr;
+           return ptr;
+       }
+   }
+   #endif

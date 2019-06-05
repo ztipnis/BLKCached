@@ -1,0 +1,13 @@
+.. _exhale_define_Store_8h_1a8da81f44cb2c509b9c67fa3f29986c9c:
+
+Define BLKCACHE_STORE
+=====================
+
+- Defined in :ref:`file_src_Store.h`
+
+
+Define Documentation
+--------------------
+
+
+.. doxygendefine:: BLKCACHE_STORE

@@ -1,0 +1,22 @@
+.. _exhale_struct_structBLKCACHE_1_1Block_1_1RawMemory:
+
+Struct Block::RawMemory
+=======================
+
+- Defined in :ref:`file_src_Block.h`
+
+
+Nested Relationships
+--------------------
+
+This struct is a nested type of :ref:`exhale_class_classBLKCACHE_1_1Block`.
+
+
+Struct Documentation
+--------------------
+
+
+.. doxygenstruct:: BLKCACHE::Block::RawMemory
+   :members:
+   :protected-members:
+   :undoc-members:

@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+  
+  <!-- Licensed under the Apache 2.0 License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/open-sans/stylesheet.css" />
+  <!-- Licensed under the SIL Open Font License -->
+  <link rel="stylesheet" type="text/css" href="../_static/fonts/source-serif-pro/source-serif-pro.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap.min.css" />
+  <link rel="stylesheet" type="text/css" href="../_static/css/bootstrap-theme.min.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+    <title>Program Listing for File Store.h &#8212; BLKCached 0.0.1 documentation</title>
+    <link rel="stylesheet" href="../_static/guzzle.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/collapsible-lists/css/tree_view.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="../_static/language_data.js"></script>
+    <script type="text/javascript" src="../_static/collapsible-lists/js/CollapsibleLists.compressed.js"></script>
+    <script type="text/javascript" src="../_static/collapsible-lists/js/apply-collapsible-lists.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  
+   
+
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">BLKCached 0.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="container-wrapper">
+
+      <div id="mobile-toggle">
+        <a href="#"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span></a>
+      </div>
+  <div id="left-column">
+    <div class="sphinxsidebar">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/api/program_listing_file_src_Store.h.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div class="sidebar-block">
+  <div class="sidebar-wrapper">
+    <div id="main-search">
+      <form class="form-inline" action="../search.html" method="GET" role="form">
+        <div class="input-group">
+          <input name="q" type="text" class="form-control" placeholder="Search...">
+        </div>
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+        <div id="right-column">
+          
+          <div role="navigation" aria-label="breadcrumbs navigation">
+            <ol class="breadcrumb">
+              <li><a href="../index.html">Docs</a></li>
+              
+              <li>Program Listing for File Store.h</li>
+            </ol>
+          </div>
+          
+          <div class="document clearer body">
+            
+  <div class="section" id="program-listing-for-file-store-h">
+<span id="program-listing-file-src-store-h"></span><h1>Program Listing for File Store.h<a class="headerlink" href="#program-listing-for-file-store-h" title="Permalink to this headline">¶</a></h1>
+<p>↰ <a class="reference internal" href="file_src_Store.h.html#file-src-store-h"><span class="std std-ref">Return to documentation for file</span></a> (<code class="docutils literal notranslate"><span class="pre">src/Store.h</span></code>)</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">&lt;unordered_map&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;set&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;mutex&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;atomic&gt;</span><span class="cp"></span>
+
+<span class="cp">#ifdef DEBUG</span>
+<span class="cp">#include</span> <span class="cpf">&quot;memory_debug.h&quot;</span><span class="cp"></span>
+<span class="cp">#else</span>
+<span class="cp">#include</span> <span class="cpf">&quot;memory_production.h&quot;</span><span class="cp"></span>
+<span class="cp">#endif</span>
+
+<span class="cp">#ifndef BLKCACHE_STORE</span>
+<span class="cp">#define BLKCACHE_STORE</span>
+
+<span class="cp">#ifndef DEFAULT_BLOCK_SIZE</span>
+<span class="cp">#define DEFAULT_BLOCK_SIZE 4096</span>
+<span class="cp">#endif</span>
+
+<span class="k">extern</span> <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span> <span class="n">config</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="n">BLKCACHE</span><span class="p">{</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">long</span><span class="o">&gt;</span>
+    <span class="k">class</span> <span class="nc">Block</span><span class="p">;</span>
+    <span class="k">template</span> <span class="o">&lt;</span><span class="kt">unsigned</span> <span class="kt">long</span> <span class="n">BLOCK_SIZE</span><span class="o">&gt;</span>
+    <span class="k">class</span> <span class="nc">Store</span><span class="p">{</span>
+    <span class="k">private</span><span class="o">:</span>
+        <span class="c1">//default constructor</span>
+        <span class="n">Store</span><span class="p">()</span> <span class="o">=</span> <span class="k">default</span><span class="p">;</span>
+        <span class="c1">//running count of last created block number</span>
+        <span class="kt">long</span> <span class="kt">long</span> <span class="n">lastBlockno</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="c1">//reference to item within block</span>
+        <span class="k">struct</span> <span class="n">ref</span> <span class="p">{</span>
+            <span class="kt">size_t</span> <span class="n">offset</span><span class="p">;</span>
+            <span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;*</span> <span class="n">block</span><span class="p">;</span>
+            <span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;*</span> <span class="k">operator</span><span class="o">-&gt;</span><span class="p">(){</span> <span class="k">return</span> <span class="n">block</span><span class="p">;</span> <span class="p">}</span>
+            <span class="k">const</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="k">operator</span><span class="o">*</span><span class="p">()</span> <span class="k">const</span><span class="p">{</span> <span class="k">return</span> <span class="n">block</span><span class="o">-&gt;</span><span class="n">get</span><span class="p">(</span><span class="n">offset</span><span class="p">);</span> <span class="p">}</span>
+            <span class="n">ref</span><span class="p">(){}</span>
+            <span class="n">ref</span><span class="p">(</span><span class="kt">ssize_t</span> <span class="n">bo</span><span class="p">,</span> <span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">)</span><span class="o">:</span> <span class="n">offset</span><span class="p">(</span><span class="n">bo</span><span class="p">),</span> <span class="n">block</span><span class="p">(</span><span class="n">b</span><span class="p">){};</span>
+            <span class="n">ref</span><span class="p">(</span><span class="k">const</span> <span class="n">ref</span><span class="o">&amp;</span> <span class="n">r</span><span class="p">)</span><span class="o">:</span> <span class="n">offset</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">offset</span><span class="p">),</span> <span class="n">block</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="n">block</span><span class="p">){};</span>
+        <span class="p">};</span>
+        <span class="k">typedef</span> <span class="k">struct</span> <span class="n">ref</span> <span class="n">ref</span><span class="p">;</span>
+        <span class="c1">//reference to block</span>
+        <span class="k">struct</span> <span class="n">bref</span> <span class="p">{</span>
+            <span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;*</span> <span class="n">b</span><span class="p">;</span>
+            <span class="kt">int</span> <span class="n">s</span><span class="p">;</span>
+            <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">bref</span><span class="o">&amp;</span> <span class="n">b2</span><span class="p">)</span> <span class="k">const</span><span class="p">{</span>
+                <span class="k">if</span><span class="p">((</span><span class="n">b</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">b2</span><span class="p">.</span><span class="n">b</span><span class="p">))</span>
+                    <span class="k">return</span> <span class="o">*</span><span class="n">b</span> <span class="o">&lt;</span> <span class="o">*</span><span class="p">(</span><span class="n">b2</span><span class="p">.</span><span class="n">b</span><span class="p">);</span>
+                <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+                    <span class="k">return</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">free_space</span> <span class="o">&lt;</span> <span class="n">b2</span><span class="p">.</span><span class="n">s</span><span class="p">;</span>
+                <span class="k">else</span> <span class="nf">if</span><span class="p">(</span><span class="n">b2</span><span class="p">.</span><span class="n">b</span><span class="p">){</span>
+                    <span class="k">return</span> <span class="n">s</span> <span class="o">&lt;</span> <span class="n">b2</span><span class="p">.</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">free_space</span><span class="p">;</span>
+                <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                    <span class="k">throw</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;</span> <span class="o">*</span><span class="k">operator</span><span class="o">-&gt;</span><span class="p">(){</span>
+                <span class="k">return</span> <span class="n">b</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;&amp;</span> <span class="k">operator</span><span class="o">*</span><span class="p">(){</span>
+                <span class="k">return</span> <span class="o">*</span><span class="n">b</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="n">bref</span><span class="p">(</span><span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;</span> <span class="o">*</span><span class="n">_b</span><span class="p">)</span><span class="o">:</span> <span class="n">b</span><span class="p">(</span><span class="n">_b</span><span class="p">){}</span>
+            <span class="n">bref</span><span class="p">(</span><span class="kt">long</span> <span class="kt">long</span> <span class="n">i</span><span class="p">)</span><span class="o">:</span> <span class="n">s</span><span class="p">(</span><span class="n">i</span><span class="p">){}</span>
+        <span class="p">};</span>
+        <span class="k">typedef</span> <span class="k">struct</span> <span class="n">bref</span> <span class="n">bref</span><span class="p">;</span>
+        <span class="c1">//KV store</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">unordered_map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span> <span class="n">ref</span><span class="o">&gt;</span> <span class="n">_store</span><span class="p">;</span>
+        <span class="c1">//Set of blocks managed by this instance</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">set</span><span class="o">&lt;</span><span class="n">bref</span><span class="o">&gt;</span> <span class="n">blocks</span><span class="p">;</span>
+    <span class="k">public</span><span class="o">:</span>
+        <span class="c1">//No Copy Constructor - Singleton only</span>
+        <span class="n">Store</span><span class="p">(</span><span class="n">Store</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span>               <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+        <span class="c1">//No Assignment Operator - Singleton Only</span>
+        <span class="kt">void</span> <span class="k">operator</span><span class="o">=</span><span class="p">(</span><span class="n">Store</span> <span class="k">const</span><span class="o">&amp;</span><span class="p">)</span>      <span class="o">=</span> <span class="k">delete</span><span class="p">;</span>
+        <span class="c1">//Get instance of Store</span>
+        <span class="k">static</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">getInst</span><span class="p">(){</span>
+            <span class="c1">//initialize initial store</span>
+            <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">shared_ptr</span><span class="o">&lt;</span><span class="n">Store</span><span class="o">&gt;</span> <span class="n">inst</span><span class="p">(</span><span class="k">new</span> <span class="n">Store</span><span class="p">());</span>
+            <span class="c1">//make atomic</span>
+            <span class="k">static</span> <span class="n">std</span><span class="o">::</span><span class="n">atomic</span><span class="o">&lt;</span><span class="n">Store</span><span class="o">*&gt;</span> <span class="n">inst_atomic</span><span class="p">(</span><span class="n">inst</span><span class="p">.</span><span class="n">get</span><span class="p">());</span>
+            <span class="c1">//return atomic instance</span>
+            <span class="k">return</span> <span class="n">inst_atomic</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="kt">void</span> <span class="n">put</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">key</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">value</span><span class="p">){</span>
+            <span class="k">auto</span> <span class="n">blk</span> <span class="o">=</span> <span class="n">blocks</span><span class="p">.</span><span class="n">lower_bound</span><span class="p">(</span><span class="n">value</span><span class="p">.</span><span class="n">length</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">char</span><span class="p">));</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">blk</span> <span class="o">!=</span> <span class="n">blocks</span><span class="p">.</span><span class="n">end</span><span class="p">()){</span>
+                <span class="c1">//Block found which can fit</span>
+                <span class="n">blocks</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">blk</span><span class="p">);</span>
+                <span class="k">auto</span> <span class="n">loc</span> <span class="o">=</span> <span class="p">(</span><span class="o">*</span><span class="n">blk</span><span class="p">).</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+                <span class="n">blocks</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">blk</span><span class="p">,</span> <span class="o">*</span><span class="n">blk</span><span class="p">);</span>
+                <span class="k">const</span> <span class="n">ref</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">blk</span><span class="p">).</span><span class="n">b</span><span class="p">);</span>
+                <span class="n">_store</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">;</span>
+            <span class="p">}</span><span class="k">else</span><span class="p">{</span>
+                <span class="c1">//create new block</span>
+                <span class="k">auto</span> <span class="n">b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Block</span><span class="o">&lt;</span><span class="n">BLOCK_SIZE</span><span class="o">&gt;</span><span class="p">(</span><span class="n">lastBlockno</span><span class="o">++</span><span class="p">,</span> <span class="n">MEMORY</span><span class="o">::</span><span class="n">get</span><span class="p">,</span> <span class="n">MEMORY</span><span class="o">::</span><span class="n">set</span><span class="p">);</span>
+                <span class="k">auto</span> <span class="n">loc</span> <span class="o">=</span> <span class="n">b</span><span class="o">-&gt;</span><span class="n">put</span><span class="p">(</span><span class="n">value</span><span class="p">);</span>
+                <span class="n">blocks</span><span class="p">.</span><span class="n">insert</span><span class="p">(</span><span class="n">bref</span><span class="p">(</span><span class="n">b</span><span class="p">));</span>
+                <span class="n">_store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span><span class="p">(</span><span class="n">loc</span><span class="p">,</span> <span class="n">b</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="kt">bool</span> <span class="n">containsKey</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">key</span><span class="p">){</span>
+            <span class="k">return</span> <span class="o">!</span><span class="p">(</span><span class="n">_store</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="n">_store</span><span class="p">.</span><span class="n">end</span><span class="p">());</span>
+        <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">get</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">key</span><span class="p">){</span>
+            <span class="n">ref</span><span class="o">&amp;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">_store</span><span class="p">[</span><span class="n">key</span><span class="p">];</span>
+            <span class="k">return</span> <span class="o">*</span><span class="n">r</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">del</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">key</span><span class="p">){</span>
+            <span class="k">auto</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">_store</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">del</span><span class="p">(</span><span class="n">_store</span><span class="p">[</span><span class="n">key</span><span class="p">].</span><span class="n">offset</span><span class="p">);</span>
+            <span class="n">_store</span><span class="p">.</span><span class="n">erase</span><span class="p">(</span><span class="n">key</span><span class="p">);</span>
+            <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">F</span><span class="o">&gt;</span>
+        <span class="kt">void</span> <span class="n">forKeys</span><span class="p">(</span><span class="n">F</span> <span class="n">cb</span><span class="p">){</span>
+            <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">kv</span> <span class="p">:</span> <span class="n">_store</span><span class="p">){</span>
+                <span class="n">cb</span><span class="p">(</span><span class="n">kv</span><span class="p">.</span><span class="n">first</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">};</span>
+        <span class="o">~</span><span class="n">Store</span><span class="p">(){</span>
+            <span class="k">for</span><span class="p">(</span><span class="k">auto</span> <span class="nl">b</span><span class="p">:</span> <span class="n">blocks</span><span class="p">){</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">lock_guard</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">mutex</span><span class="o">&gt;</span> <span class="n">lgb</span><span class="p">(</span><span class="n">b</span><span class="o">-&gt;</span><span class="n">blkMTX</span><span class="p">);</span>
+                <span class="k">delete</span> <span class="n">b</span><span class="p">.</span><span class="n">b</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="cp">#ifdef DEBUG</span>
+            <span class="n">free</span><span class="p">(</span><span class="n">BLKCACHE</span><span class="o">::</span><span class="n">MEMORY</span><span class="o">::</span><span class="n">mem</span><span class="p">);</span>
+            <span class="cp">#endif</span>
+        <span class="p">}</span>
+
+    <span class="p">};</span>
+<span class="p">}</span>
+
+
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+</div>
+
+
+          </div>
+            
+        </div>
+        <div class="clearfix"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="nav-item nav-item-0"><a href="../index.html">BLKCached 0.0.1 documentation</a> &#187;</li> 
+      </ul>
+    </div>
+<script type="text/javascript">
+  $("#mobile-toggle a").click(function () {
+    $("#left-column").toggle();
+  });
+</script>
+<script type="text/javascript" src="../_static/js/bootstrap.js"></script>
+  <div class="footer">
+    &copy; Copyright 2019, Zachary Tipnis. Created using <a href="http://sphinx.pocoo.org/">Sphinx</a>.
+  </div>
+  </body>
+</html>

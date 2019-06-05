@@ -1,0 +1,16 @@
+.. _exhale_class_classBLKCACHE_1_1MEMORY_1_1PMEMBlock:
+
+Class PMEMBlock
+===============
+
+- Defined in :ref:`file_src_memory_production.h`
+
+
+Class Documentation
+-------------------
+
+
+.. doxygenclass:: BLKCACHE::MEMORY::PMEMBlock
+   :members:
+   :protected-members:
+   :undoc-members:
