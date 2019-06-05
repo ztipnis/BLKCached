@@ -15,4 +15,4 @@
 Full Docs
 =============
 
-:doc:`api/api_`
+:doc:`api/api`
