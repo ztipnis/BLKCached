@@ -39,7 +39,7 @@ if (DOXYGEN_FOUND AND SPHINX_FOUND)
                        COMMAND 
                          ${SPHINX_EXECUTABLE}
                          -Dbreathe_projects.BLKCached=${DOXYGEN_OUTPUT_DIR}/xml
-                         -M jekyll
+                         -b dirhtml
                        ${SPHINX_SOURCE} ${SPHINX_BUILD}
                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                        DEPENDS
