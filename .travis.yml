@@ -18,6 +18,7 @@ addons:
       - python3.6
       - virtualenv
       - python3-sphinx
+      - zip
 cache:
   apt: true
 
@@ -29,12 +30,21 @@ script:
   - cd build
   - cmake ..
   - make
+  - zip -r BLKCACHED-$(echo $RELEASE_VERSION).zip bin/*
 
 deploy:
   provider: pages
   skip_cleanup: true
   local_dir: build/docs/sphinx
-  github_token: $API_TOKEN
+  github_token: $GITHUB_TOKEN  # Set in the settings page of your repository, as a secure variable
+  keep_history: true
   on:
     branch: master
 
+deploy:
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file: build/BLKCACHED-$RELEASE_VERSION.zip
+  keep_history: true
+  skip_cleanup: true
+  draft: true
