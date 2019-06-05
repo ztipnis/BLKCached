@@ -192,7 +192,7 @@ namespace BLKCACHE{
 		while(sndOffset < (size) && *(((char*)start->mem) + sndOffset) != '\0' && *(((char*)start->mem) + sndOffset) != char(30))
 			sndOffset += sizeof(char);
 		std::memcpy(((char*) start2->mem) + offset, ((char*) start->mem) + sndOffset, BLOCK_SIZE - sndOffset);
-		free_space += sndOffset - offset + 1;
+		//free_space += sndOffset - offset + 1;
 		write(start2);
 		raw = start2;
 		size_t chrln = (sndOffset - offset) / sizeof(char);

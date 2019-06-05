@@ -17,6 +17,27 @@
 #define DEFAULT_BLOCK_SIZE 4096
 #endif
 
+#define NEEDS_BIT(N, B)     (((unsigned long)N >> B) > 0)
+
+#define BITS_TO_REPRESENT(N)                            \
+        (NEEDS_BIT(N,  0) + NEEDS_BIT(N,  1) + \
+         NEEDS_BIT(N,  2) + NEEDS_BIT(N,  3) + \
+         NEEDS_BIT(N,  4) + NEEDS_BIT(N,  5) + \
+         NEEDS_BIT(N,  6) + NEEDS_BIT(N,  7) + \
+         NEEDS_BIT(N,  8) + NEEDS_BIT(N,  9) + \
+         NEEDS_BIT(N, 10) + NEEDS_BIT(N, 11) + \
+         NEEDS_BIT(N, 12) + NEEDS_BIT(N, 13) + \
+         NEEDS_BIT(N, 14) + NEEDS_BIT(N, 15) + \
+         NEEDS_BIT(N, 16) + NEEDS_BIT(N, 17) + \
+         NEEDS_BIT(N, 18) + NEEDS_BIT(N, 19) + \
+         NEEDS_BIT(N, 20) + NEEDS_BIT(N, 21) + \
+         NEEDS_BIT(N, 22) + NEEDS_BIT(N, 23) + \
+         NEEDS_BIT(N, 24) + NEEDS_BIT(N, 25) + \
+         NEEDS_BIT(N, 26) + NEEDS_BIT(N, 27) + \
+         NEEDS_BIT(N, 28) + NEEDS_BIT(N, 29) + \
+         NEEDS_BIT(N, 30) + NEEDS_BIT(N, 31)   \
+        )
+
 extern std::unordered_map<std::string,std::string> config;
 
 namespace BLKCACHE{
@@ -30,18 +51,21 @@ namespace BLKCACHE{
 	template <unsigned long BLOCK_SIZE>
 	class Store{
 	private:
+		std::vector<ref> deleted;
 		//default constructor
 		Store() = default;
 		//running count of last created block number
 		long long lastBlockno = 0;
 		//reference to item within block
 		struct ref {
-			size_t offset;
+			size_t offset : BITS_TO_REPRESENT(BLOCK_SIZE);
+			size_t size : BITS_TO_REPRESENT(BLOCK_SIZE);
+
 			Block<BLOCK_SIZE>* block;
 			Block<BLOCK_SIZE>* operator->(){ return block; }
 			const std::string operator*() const{ return block->get(offset); }
 			ref(){}
-			ref(ssize_t bo, Block<BLOCK_SIZE>* b): offset(bo), block(b){};
+			ref(ssize_t bo, ssize_t sz,  Block<BLOCK_SIZE>* b): offset(bo), size(sz), block(b){};
 			ref(const ref& r): offset(r.offset), block(r.block){};
 		};
 		typedef struct ref ref;
@@ -98,17 +122,22 @@ namespace BLKCACHE{
 			auto blk = blocks.lower_bound(value.length() * sizeof(char));
 			if(blk != blocks.end()){
 				//Block found which can fit
-				blocks.erase(blk);
+				blocks.erase(blk)
+				for (auto it = begin(deleted); it != end (deleted); ++it) {
+				    if(deleted->block == blk.b){
+				    	blk->del(deleted->offset);
+				    }
+				}
 				auto loc = (*blk).b->put(value);
 				blocks.insert(blk, *blk);
-				const ref& r = ref(loc, (*blk).b);
+				const ref& r = ref(loc, sizeof(value.c_str()), (*blk).b);
 				_store[value] = r;
 			}else{
 				//create new block
 				auto b = new Block<BLOCK_SIZE>(lastBlockno++, MEMORY::get, MEMORY::set);
 				auto loc = b->put(value);
 				blocks.insert(bref(b));
-				_store[key] = ref(loc, b);
+				_store[key] = ref(loc,sizeof(value.c_str()), b);
 			}
 		}
 		/**
@@ -139,10 +168,13 @@ namespace BLKCACHE{
 		 *
 		 * @return     the value that was assocaited with key
 		 */
-		std::string del(std::string key){
-			auto ret = _store[key]->del(_store[key].offset);
+		void del(std::string key){
+			//auto ret = _store[key]->del(_store[key].offset);
+			auto ref = _store[key];
+			deleted.push_bak(ref);
+			ref.block->free_space += ref.size;
 			_store.erase(key);
-			return ret;
+			//return ret;
 		}
 		/**
 		 * @brief      For each key, exec callback
