@@ -84,7 +84,7 @@ Singleton class which serves as a coordinator for blocks, and a storage for key/
 
 | Function     | Args                                                         | Effect                                                       | Return        |
 | ------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------- |
-| Constructor  | `long long block, void (&_getter)(long long, void*),`\  <br/> `void (&_setter)(long long, void*)` | Creates a new Block Object at Block offset # (block), with function (\_getter) to fetch data from the disk, and (\_setter) to save to disk | N/A           |
+| Constructor  | `long long block, void (&_getter)(long long, void*)`,  <br/> `void (&_setter)(long long, void*)` | Creates a new Block Object at Block offset # (block), with function (\_getter) to fetch data from the disk, and (\_setter) to save to disk | N/A           |
 | get          | `size_t offset`                                              | fetches null-terminated or RS- terminated char array starting at (offset) | `std::string` |
 | put          | `std::string s`                                              | Inserts string (s) into block (if fits), returns offset of new char array | `ssize_t`     |
 | del          | `size_t offset`                                              | Deletes string at (offset) and returns its old value         | `std::string` |
