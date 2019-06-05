@@ -24,7 +24,7 @@ cache:
 script:
   - virtualenv -p $(which python3) py3env
   - source py3env/bin/activate
-  - pip install breathe
+  - pip install breathe exhale m2r guzzle_sphinx_theme
   - mkdir build
   - cd build
   - cmake ..
@@ -33,7 +33,7 @@ script:
 deploy:
   provider: pages
   skip_cleanup: true
-  local_dir: build/docs/docs/sphinx
+  local_dir: build/docs/sphinx
   github_token: $API_TOKEN
   on:
     branch: master

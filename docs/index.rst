@@ -3,23 +3,16 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to BLKCached's documentation!
-=====================================
-
 .. toctree::
+   :hidden:
    :maxdepth: 2
-   :caption: Contents:
+
+   api/unabridged_api
 
 
+.. mdinclude:: ../README.md
 
-Indices and tables
-==================
+Full Docs
+=============
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
-
-Docs
-====
-
-.. doxygenindex::
+:doc:`api/api_`
