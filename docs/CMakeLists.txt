@@ -37,8 +37,9 @@ if (DOXYGEN_FOUND AND SPHINX_FOUND)
     # - The Sphinx config has been updated
     add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
                        COMMAND 
-                         ${SPHINX_EXECUTABLE} -Mjekyll
+                         ${SPHINX_EXECUTABLE}
                          -Dbreathe_projects.BLKCached=${DOXYGEN_OUTPUT_DIR}/xml
+                         -M jekyll
                        ${SPHINX_SOURCE} ${SPHINX_BUILD}
                        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                        DEPENDS
