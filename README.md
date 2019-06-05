@@ -16,24 +16,24 @@ cmake ..
 make
 ~~~
 ## Usage
-> Usage: BLKCached [options]
+> Usage: BLKCached [options]  
 > 
-> General:
->    -v [ –version ] Print version string
->    -h [ –help ] Print command line help
+> General:  
+>    -v [ –version ] Print version string  
+>    -h [ –help ] Print command line help  
 > 
-> Configuration: 
->    -s [ –poolSize ] Size of Block Pool Stored on Disk (Defines maximum data stored to disk)
->    -f [ –path ] Path to pool file
->    -j [ –threads ] Maximum number of concurrent threads handling socket i/o 
->    -i [ –ip ] IP Address on which to listen
->    -p [ –port ] Port on which to listen
+> Configuration:  
+>    -s [ –poolSize ] Size of Block Pool Stored on Disk (Defines maximum data stored to disk)  
+>    -f [ –path ] Path to pool file  
+>    -j [ –threads ] Maximum number of concurrent threads handling socket i/o   
+>    -i [ –ip ] IP Address on which to listen  
+>    -p [ –port ] Port on which to listen  
 > 
-> Command Line:
->    -c [ –cfg ] Path to config file
+> Command Line:  
+>    -c [ –cfg ] Path to config file  
 
-## Table of Contents
- * [BLKCached](#blkcached)
+## Table of Contents  
+   * [BLKCached](#blkcached)
       * [Intro](#intro)
       * [Installation](#installation)
       * [Usage](#usage)
@@ -49,12 +49,6 @@ make
          * [configParser.h](#configparserh)
          * [memory_*.h](#memory_h)
          * [bds.conf](#bdsconf)
-      * [Appendix](#appendix)
-         * [Code for Headers](#code-for-headers)
-            * [Block.h](#blockh-1)
-         * [Store.h](#storeh-1)
-            * [configParser.h](#configparserh-1)
-            * [memory_debug.h](#memory_debugh)
 
 ## Files
 ### Block.h
