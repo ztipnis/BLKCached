@@ -15,7 +15,6 @@ addons:
       - doxygen
       - libpmemblk-dev
       - libtbb-dev
-      - python3.6
       - virtualenv
       - python3-sphinx
       - zip
@@ -30,7 +29,8 @@ script:
   - cd build
   - cmake ..
   - make
-  - zip -r BLKCACHED-$(echo $RELEASE_VERSION).zip bin/*
+  - ls
+  #- zip -r BLKCACHED-$(echo $RELEASE_VERSION).zip bin/*
 
 deploy:
   provider: pages
@@ -41,10 +41,10 @@ deploy:
   on:
     branch: master
 
-deploy:
-  provider: releases
-  api_key: $GITHUB_TOKEN
-  file: build/BLKCACHED-$RELEASE_VERSION.zip
-  keep_history: true
-  skip_cleanup: true
-  draft: true
+#deploy:
+#  provider: releases
+#  api_key: $GITHUB_TOKEN
+#  file: build/BLKCACHED-$RELEASE_VERSION.zip
+#  keep_history: true
+#  skip_cleanup: true
+#  draft: true
