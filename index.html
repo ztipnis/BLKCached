@@ -60,21 +60,21 @@
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#usage">Usage</a></li>
 <li><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
-<li><a class="reference internal" href="#id9">Files</a><ul>
-<li><a class="reference internal" href="#id10">Block.h</a><ul>
-<li><a class="reference internal" href="#id11">Class Block</a></li>
-<li><a class="reference internal" href="#id12">Struct RawMemory</a></li>
+<li><a class="reference internal" href="#id6">Files</a><ul>
+<li><a class="reference internal" href="#id7">Block.h</a><ul>
+<li><a class="reference internal" href="#id8">Class Block</a></li>
+<li><a class="reference internal" href="#id9">Struct RawMemory</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id13">Store.h</a><ul>
-<li><a class="reference internal" href="#id14">Class Store</a></li>
-<li><a class="reference internal" href="#id15">Struct ref</a></li>
-<li><a class="reference internal" href="#id16">Struct bref</a></li>
+<li><a class="reference internal" href="#id10">Store.h</a><ul>
+<li><a class="reference internal" href="#id11">Class Store</a></li>
+<li><a class="reference internal" href="#id12">Struct ref</a></li>
+<li><a class="reference internal" href="#id13">Struct bref</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#id17">configParser.h</a></li>
-<li><a class="reference internal" href="#id18">memory_*.h</a></li>
-<li><a class="reference internal" href="#id19">bds.conf</a></li>
+<li><a class="reference internal" href="#id14">configParser.h</a></li>
+<li><a class="reference internal" href="#id15">memory_*.h</a></li>
+<li><a class="reference internal" href="#id16">bds.conf</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#documentation">Documentation</a></li>
@@ -150,16 +150,16 @@ make
 <blockquote>
 <div><p>Usage: BLKCached [options]</p>
 <dl class="simple">
-<dt>General:</dt><dd><p>-v [ –version ] Print version string
+<dt>General:<span class="raw-html-m2r"><br></span></dt><dd><p>-v [ –version ] Print version string<span class="raw-html-m2r"><br></span>
 -h [ –help ] Print command line help</p>
 </dd>
-<dt>Configuration:</dt><dd><p>-s [ –poolSize ] Size of Block Pool Stored on Disk (Defines maximum data stored to disk)
--f [ –path ] Path to pool file
--j [ –threads ] Maximum number of concurrent threads handling socket i/o
--i [ –ip ] IP Address on which to listen
+<dt>Configuration:<span class="raw-html-m2r"><br></span></dt><dd><p>-s [ –poolSize ] Size of Block Pool Stored on Disk (Defines maximum data stored to disk)<span class="raw-html-m2r"><br></span>
+-f [ –path ] Path to pool file<span class="raw-html-m2r"><br></span>
+-j [ –threads ] Maximum number of concurrent threads handling socket i/o<span class="raw-html-m2r"><br></span>
+-i [ –ip ] IP Address on which to listen<span class="raw-html-m2r"><br></span>
 -p [ –port ] Port on which to listen</p>
 </dd>
-<dt>Command Line:</dt><dd><p>-c [ –cfg ] Path to config file</p>
+<dt>Command Line:<span class="raw-html-m2r"><br></span></dt><dd><p>-c [ –cfg ] Path to config file</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -193,32 +193,17 @@ make
 <li><p><a class="reference external" href="#bdsconf">bds.conf</a></p></li>
 </ul>
 </li>
-<li><p><a class="reference external" href="#appendix">Appendix</a></p>
-<ul>
-<li><p><a class="reference external" href="#code-for-headers">Code for Headers</a></p>
-<ul>
-<li><p><a class="reference external" href="#blockh-1">Block.h</a></p></li>
-</ul>
-</li>
-<li><p><a class="reference external" href="#storeh-1">Store.h</a></p>
-<ul>
-<li><p><a class="reference external" href="#configparserh-1">configParser.h</a></p></li>
-<li><p><a class="reference external" href="#memory_debugh">memory_debug.h</a></p></li>
-</ul>
-</li>
-</ul>
-</li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="section" id="id9">
-<h2>Files<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="id10">
-<h3>Block.h<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id6">
+<h2>Files<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h3>Block.h<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
 <p>Class for managing in-memory blocks of data (as well as for fetching those blocks from some block addressable storage medium)</p>
-<div class="section" id="id11">
-<h4>Class Block<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id8">
+<h4>Class Block<a class="headerlink" href="#id8" title="Permalink to this headline">¶</a></h4>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 25%" />
@@ -267,16 +252,16 @@ make
 </tbody>
 </table>
 </div>
-<div class="section" id="id12">
-<h4>Struct RawMemory<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id9">
+<h4>Struct RawMemory<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h4>
 <p>Bridges malloc (allocate raw memory of certain size) to C++’s internal</p>
 </div>
 </div>
-<div class="section" id="id13">
-<h3>Store.h<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id10">
+<h3>Store.h<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h3>
 <p>Singleton class which serves as a coordinator for blocks, and a storage for key/value ref pairs.</p>
-<div class="section" id="id14">
-<h4>Class Store<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id11">
+<h4>Class Store<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h4>
 <table class="docutils align-default">
 <colgroup>
 <col style="width: 25%" />
@@ -293,7 +278,7 @@ make
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Constructor</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span> <span class="pre">block,</span> <span class="pre">void</span> <span class="pre">(&amp;_getter)(long</span> <span class="pre">long,</span> <span class="pre">void*),</span></code> <span class="raw-html-m2r"><br/></span> <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">(&amp;_setter)(long</span> <span class="pre">long,</span> <span class="pre">void*)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span> <span class="pre">block,</span> <span class="pre">void</span> <span class="pre">(&amp;_getter)(long</span> <span class="pre">long,</span> <span class="pre">void*)</span></code>,  <span class="raw-html-m2r"><br/></span> <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">(&amp;_setter)(long</span> <span class="pre">long,</span> <span class="pre">void*)</span></code></p></td>
 <td><p>Creates a new Block Object at Block offset # (block), with function (_getter) to fetch data from the disk, and (_setter) to save to disk</p></td>
 <td><p>N/A</p></td>
 </tr>
@@ -320,25 +305,25 @@ make
 </tbody>
 </table>
 </div>
-<div class="section" id="id15">
-<h4>Struct ref<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id12">
+<h4>Struct ref<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h4>
 <p>Reference to block/offset. Contains a few helpful functions for dereferencing etc.</p>
 </div>
-<div class="section" id="id16">
-<h4>Struct bref<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h4>
+<div class="section" id="id13">
+<h4>Struct bref<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h4>
 <p>Shim for pointer to block, with operators for comparing blocks based on free space.</p>
 </div>
 </div>
-<div class="section" id="id17">
-<h3>configParser.h<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id14">
+<h3>configParser.h<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h3>
 <p>Defines static unordered map with k/v pairs for config options and values.</p>
 </div>
-<div class="section" id="id18">
-<h3>memory_*.h<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id15">
+<h3>memory_*.h<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h3>
 <p>Debug (memory-only), and Production (Persistent Memory [aka. on disk]) getters and setters used to emulate block-addressable mediums.</p>
 </div>
-<div class="section" id="id19">
-<h3>bds.conf<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id16">
+<h3>bds.conf<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h3>
 <p>Options used to configure k/v store and server daemon</p>
 <table class="docutils align-default">
 <colgroup>
