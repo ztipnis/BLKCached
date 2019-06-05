@@ -27,7 +27,6 @@ script:
   - source py3env/bin/activate
   - pip install breathe exhale m2r guzzle_sphinx_theme sphinx-jekyll-builder
   - mkdir build
-  - pip install -e git+git://github.com/michaeljones/sphinx-to-github.git#egg=sphinx-to-github
   - cd build
   - cmake ..
   - make
