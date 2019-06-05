@@ -41,7 +41,7 @@ extensions = [ "breathe", "exhale", "m2r", "guzzle_sphinx_theme" ]
 exhale_args = {
     # These arguments are required
     "containmentFolder":     "./api",
-    "rootFileName":          "api_.rst",
+    "rootFileName":          "api.rst",
     "rootFileTitle":         "Unabridged API Documentation",
     "doxygenStripFromPath":  "..",
     # Suggested optional arguments
@@ -82,4 +82,4 @@ html_theme_options = {
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+

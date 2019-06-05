@@ -20,6 +20,7 @@ addons:
       - zip
 cache:
   apt: true
+  pip: true
 
 script:
   - virtualenv -p $(which python3) py3env
@@ -30,7 +31,7 @@ script:
   - cmake ..
   - make
   - ls
-  #- zip -r BLKCACHED-$(echo $RELEASE_VERSION).zip bin/*
+  - zip -r BLKCACHED-$(echo $RELEASE_VERSION).zip bin
 
 deploy:
   provider: pages

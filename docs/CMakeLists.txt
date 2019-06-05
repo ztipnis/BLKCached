@@ -37,7 +37,8 @@ if (DOXYGEN_FOUND AND SPHINX_FOUND)
     # - The Sphinx config has been updated
     add_custom_command(OUTPUT ${SPHINX_INDEX_FILE}
                        COMMAND 
-                         ${SPHINX_EXECUTABLE} -b html
+                         ${SPHINX_EXECUTABLE} -b dirhtml
+                         -Dhtml_static_path = ${SPHINX_BUILD}/_static
                          # Tell Breathe where to find the Doxygen output
                          -Dbreathe_projects.BLKCached=${DOXYGEN_OUTPUT_DIR}/xml
                        ${SPHINX_SOURCE} ${SPHINX_BUILD}
