@@ -36,7 +36,7 @@ release = '0.0.1'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = [ "breathe", "exhale", "m2r", "guzzle_sphinx_theme" ]
+extensions = [ "breathe", "exhale", "m2r", "guzzle_sphinx_theme", "sphinxtogithub" ]
 
 exhale_args = {
     # These arguments are required
