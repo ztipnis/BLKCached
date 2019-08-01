@@ -8,7 +8,7 @@ typedef unsigned int uint;
 #define off64_t off_t
 #endif
 
-static void* allocator(int number, int size);
+extern void* allocator(int number, int size);
 template <uint64_t BLOCK_SIZE, uint64_t (*hash_func)(const std::string&)>
 #define buckets (nblocks * (BLOCK_SIZE/sizeof(uint64_t)));
 class BlockMgr {
@@ -17,6 +17,11 @@ private:
 	void* start;
 	const float table_cache_ratio;
 	uint64_t nblocks;
+	typedef struct cachekey {
+		unsigned int hitct;
+		ssize_t offset;
+		size_t length;
+	} cachekey;
 	
 	//public functions
 public:
@@ -27,7 +32,16 @@ public:
 	std::string get(std::string &key){
 		uint block, itm;
 		hash_to_bucket(key, block, itm);
-
+		uint64_t* blk = static_cast<uint64_t*>(get_block(block));
+		uint64_t item = blk[itm];
+		uint16_t keyHash;
+		off64_t address;
+		bool ondisk;
+		if(ondisk){
+			throw std::runtime_error("Not Yet Implemented");
+		}else{
+			
+		}
 	}
 	void put(const std::string &key, const std::string &value){
 		uint block, itm;
@@ -35,78 +49,83 @@ public:
 		uint64_t* blk = static_cast<uint64_t*>(get_block(block));
 		if(blk[itm] > 0){
 			//robinhood
-			
+
 		}else{
 			void* adr = cache(key, value);
-			data = pack(hash_func(key), reinterpret_cast<uint64_t>(adr), false);
+			uint64_t data = pack(hash_func(key), reinterpret_cast<uint64_t>(adr), false);
 		}
-		set_block(block, 0, blk, BLOCK_SIZE);
+		set_block(block, blk);
 	}
 	//private member functions/helpers
 private:
-	void 
-	uint scanCache(){
-		static uint next_cache_off = 0;
-		#define max ((1-table_cache_ratio)*nblocks) * BLOCK_SIZE
-		if(next_cache_off + sizeof(cacheobj) > max){
-			uint minblock = 0;
-			uint minoff = 0;
-			uint minhit = ~0;
-			for(int i = (1-table_cache_ratio) * nblocks; i < nblocks; i++){
-				//iterate blocks
-				void* block = get_block(i);
-				for(int j = 0; j < BLOCK_SIZE; j += sizeof(cacheobj)){
-					cacheobj *co = reinterpret_cast<cacheobj*>(block);
-					if(co->hitct < minhit){
-						minblock = i;
-						minoff = j;
-					}
-				}
-				free(block);
-			}
-			return (minblock * BLOCK_SIZE) + (minoff * sizeof(cacheobj));
-		}else{
-			return next_cache_off;
-		}
-		#undef max
-	}
-	void* cache(const std::string &key, const std::string &val){
-		//cache the key
-		uint offset = scanCache();
-		uint block = offset / BLOCK_SIZE;
-		uint boff = offset % BLOCK_SIZE;
-		cacheobj* cacheblock = reinterpret_cast<cacheobj*>(get_block(block));
-		cacheblock += boff;
-		cacheobj co;
-		co->key = key;
-		co->hitct = 0;
-		co->val = val;
-		*cacheblock = co;
-		cacheblock -= boff;
-		set_block(block, boff, static_cast<void*>(cacheblock), sizeof(cacheobj));
-		free(cacheblock);
-		return cacheblock;
-	}
 	void* get_block(uint blockno){
-		//TODO: implement get block
 		void* block = calloc(1, BLOCK_SIZE);
 		uint64_t* bstart = static_cast<uint64_t*>(start);
 		std::memcpy(block, bstart+(blockno * BLOCK_SIZE), BLOCK_SIZE);
 		return block;
 	}
-	void set_block(uint blockno, uint64_t offset, void* data, uint size){
-		//TODO: implement set block
+	void set_block(uint blockno, void* data){
 		uint64_t* bstart = static_cast<uint64_t*>(start);
-		uint64_t* block = static_cast<uint64_t*>(calloc(1, BLOCK_SIZE));
-		std::memcpy(block, bstart+(blockno * BLOCK_SIZE), BLOCK_SIZE);
-		std::memcpy((block+offset), data, size);
-		std::memcpy(bstart+(blockno * BLOCK_SIZE), block, BLOCK_SIZE);
+		std::memcpy(bstart+(blockno * BLOCK_SIZE), data , BLOCK_SIZE);
 	}
-	typedef struct cacheobj {
-		unsigned int hitct;
-		std::string key;
-		std::string val;
-	} cacheobj;
+	uint64_t cache(std::string &key, std::string &val){
+		cachekey* offset;
+		void* block_data;
+		unsigned int csize = (key.length() + val.length() + 1) * sizeof(char);
+		//size without null_terminator
+		unsigned int keysize = (key.size()) * sizeof(std::string::value_type);
+		unsigned int valsize = (val.size()) * sizeof(std::string::value_type);
+		//for block in cache-dedicated blocks
+		for(unsigned int bno = 1; bno <= (nblocks * (1-table_cache_ratio)); bno++){
+			int ckoff = -1;
+			int cdoff = -1;
+			block_data = get_block((nblocks * table_cache_ratio) + bno);
+			//for cache_key in block (from end)
+			for(int i = BLOCK_SIZE - sizeof(cachekey); i >= 0; i -= sizeof(cachekey)){
+				char *tmp = static_cast<char*>(block_data) + i;
+				if(*tmp != char(0)){
+					continue;
+				}else if(*(tmp - (keysize+valsize)) != char(0)){
+					goto nextBlock;
+				}else{
+					ckoff = i;
+					break;
+				}
+			}
+			if(ckoff != 0) for(int i = 0; i < ckoff - (keysize + valsize); i++){
+				char *tmp = static_cast<char*>(block_data) + i;
+				if(*tmp == '\0'){
+					for(int j = 1; j < keysize+valsize; j++){
+						if(*(tmp+j) != '\0'){
+							goto nextOff;
+						}
+					}
+					cdoff = i;
+					break;
+				}
+				nextOff:
+				((void)0);
+			}
+			if(ckoff >= 0 && cdoff >= 0){
+				cachekey* k = static_cast<cachekey*>(block_data) + ckoff;
+				char* v = static_cast<cachekey*>(block_data) + cdoff;
+				struct cachekey rk;
+				rk.hitct = 0;
+				rk.offset = ckoff-cdoff;
+				rk.length = keysize+valsize;
+				std::memcpy(k, &rk, sizeof(cachekey));
+				std::memcpy(v,key.c_str(), keysize);
+				std::memcpy(v+keysize, val.c_str(), valsize);
+				set_block((nblocks * table_cache_ratio) + bno, block_data);
+				free(block_data);
+				return (nblocks * table_cache_ratio) + bno * BLOCK_SIZE + ckoff;
+			}
+			nextBlock:
+				free(block_data);
+		}
+		return -1;
+
+	}
 	inline void hash_to_bucket(const std::string& key, uint& block, uint& itm){
 		uint64_t hashed = hash_func(key);
 		uint bucket = hashed % buckets;
@@ -141,6 +160,6 @@ private:
 
 };
 
-static void* allocator(int number, int size){
+void* allocator(int number, int size){
 	return calloc(number, size);
 }
