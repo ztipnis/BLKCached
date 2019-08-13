@@ -72,7 +72,7 @@ public:
 			std::cout << '\0';
 		}
 		set_block(block, blk);
-		free(blk);
+		//free(blk);
 	}
 	//private member functions/helpers
 private:
@@ -181,7 +181,7 @@ private:
 			std::cout << "Putting " << data << " in empty bucket" << std::endl;
 			std::cout << '\0';
 			set_block(block, blk);
-			free(blk);
+			//free(blk);
 		}
 	}
 	void rh(const std::string &key, const std::string &val,const int offset, uint64_t ckAddr){
@@ -239,7 +239,7 @@ private:
 			std::cout << std::flush << std::endl;
 			std::cout << '\0';
 			set_block(block, blk);
-			free(blk);
+			//(blk);
 		}
 	}
 
@@ -301,7 +301,7 @@ public:
 				}
 			}
 			set_block((nblocks * table_cache_ratio) + bno, block_data);
-			free(block_data);
+			//free(block_data);
 		}
 	}
 private:
@@ -319,13 +319,21 @@ private:
 			uint64_t off = adr - ( block * BLOCK_SIZE );
 			void* blok = get_block(block);
 			std::cout << '\0';
-			cachekey* ck = reinterpret_cast<cachekey*>(blok) + off;
-			unsigned int keysize = ck->klen;
-			const char* pairaddr = static_cast<char*>((char*)(ck - (ck->offset)));
-			char* pair = (char*)calloc(sizeof(char), ck->length + 1);
-			strncpy(pair, pairaddr, ck->length);
+			if(blok){
+				cachekey* ck = reinterpret_cast<cachekey*>(blok) + off;
+				if(ck && ck->magic == CKMAGIC){
+					unsigned int keysize = ck->klen;
+					const char* pairaddr = static_cast<char*>((char*)(ck - (ck->offset)));
+					char* pair = (char*)calloc(sizeof(char), ck->length + 1);
+					strncpy(pair, pairaddr, ck->length);
+					free(blok);
+					return pair;
+				}
+				free(blok);
+				return nullptr;
+			}
 			free(blok);
-			return pair;
+			return nullptr;
 		}
 	}
 	void* get_block(uint blockno){
@@ -338,14 +346,14 @@ private:
 		char* bstart = static_cast<char*>(start);
 		std::memcpy(bstart+(blockno * BLOCK_SIZE), data , BLOCK_SIZE);
 		std::cout << "Set bucket to: ";
-		for(uint* i = (uint*) data; i < ((uint*) data) + BLOCK_SIZE; i+= sizeof(uint64_t)){
+		/*for(uint* i = (uint*) data; i < ((uint*) data) + BLOCK_SIZE; i+= sizeof(uint64_t)){
 			if(i){
 				std::cout << std::hex << *i;
 			}else{
 				std::cout << std::hex << 0;
 			}
 		}
-		std::cout << std::endl;
+		std::cout << std::endl;*/
 		free(data);
 	}
 uint64_t cache(const std::string &key, const std::string &val){
