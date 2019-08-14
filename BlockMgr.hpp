@@ -16,7 +16,7 @@ typedef unsigned int uint;
 #define uint64_t off_t
 #endif
 #define CKMAGIC 0xCAC8EBE9 //0xCACHEKEY
-#define buckets (nblocks * (BLOCK_SIZE/sizeof(uint64_t)));
+#define buckets int(nblocks * (1.25*(BLOCK_SIZE)/sizeof(uint64_t)));
 
 #ifndef mem_alloc
 #define mem_alloc(number, size) calloc(number, size)
@@ -337,7 +337,7 @@ private:
 		}
 	}
 	void* get_block(uint blockno){
-		void* block = calloc(1, BLOCK_SIZE);
+		void* block = (char*)calloc(1, BLOCK_SIZE);
 		char* bstart = static_cast<char*>(start);
 		std::memcpy(block, bstart+(blockno * BLOCK_SIZE), BLOCK_SIZE);
 		return block;
@@ -381,27 +381,25 @@ uint64_t cache(const std::string &key, const std::string &val){
 			}
 			restart_second_half:
 			for(char* i = last_null - sizeof(char); i >= first_null + reinterpret_cast<ptrdiff_t>((first_null - last_null)/2); i -=sizeof(char)){
-				if(*i != '\0'){
-					while(*i != '\0') i-=sizeof(char);
+				if(!i || *i != '\0'){
+					while(!i || *i != '\0') i-=sizeof(char);
 					last_null = i;
 					goto restart_second_half;
 				}
 			}
 			if(last_null - first_null > (pairsize + sizeof(cachekey))) {
-				cachekey* ck;
 				char* pair = first_null;
 				std::memcpy(pair,key.c_str(),key.size() * sizeof(char));
 				std::memcpy(pair+(key.size()*sizeof(char)), val.c_str(), val.size() * sizeof(char));
-				cachekey ck_tmp = {0};
-				ck_tmp.hitct = 0;
-				ck_tmp.offset = reinterpret_cast<long>((last_null - sizeof(cachekey)) - pair);
-				ck_tmp.length = pairsize;
-				ck_tmp.klen = key.size();
 				uint64_t ckoff = reinterpret_cast<uint64_t>(last_null - sizeof(cachekey)) - reinterpret_cast<uint64_t>(cRaw);
+				cachekey* ck = reinterpret_cast<cachekey*>(raw) + ckoff;
+				*ck = (cachekey){0};
+				ck->hitct = 0;
+				ck->offset = reinterpret_cast<long>((last_null - sizeof(cachekey)) - pair);
+				ck->length = pairsize;
+				ck->klen = key.size();
 				std::memmove(first_null, pair, pairsize);
 				//std::memmove(raw, cRaw, BLOCK_SIZE);
-				ck = reinterpret_cast<cachekey*>(raw) + ckoff;
-				std::memcpy(ck, &ck_tmp, sizeof(cachekey));
 				set_block(block,raw);
 				//free(raw);
 				return (block * BLOCK_SIZE) + ckoff;
@@ -436,6 +434,6 @@ uint64_t cache(const std::string &key, const std::string &val){
 };
 
 void* mem_alloc(int number, int size){
-	return calloc(number, size);
+	return (char*)calloc(number, size);
 }
 #endif
